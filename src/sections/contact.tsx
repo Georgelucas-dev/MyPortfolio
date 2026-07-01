@@ -3,6 +3,8 @@ import { useState, type FormEvent } from "react";
 
 import { motion } from "motion/react";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "/api";
+
 function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
@@ -22,7 +24,7 @@ function Contact() {
     };
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(`${API_URL}/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
