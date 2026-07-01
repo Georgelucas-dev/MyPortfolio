@@ -1,6 +1,8 @@
 // sections/contact.tsx
 import { useState, type FormEvent } from "react";
 
+import { motion } from "motion/react";
+
 function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -29,7 +31,14 @@ function Contact() {
   };
 
   return (
-    <section className="min-h-screen bg-zinc-100 text-black px-10 py-24 flex flex-col justify-center">
+    <section id="contact" className="min-h-screen bg-zinc-100 text-black px-10 py-24 flex flex-col justify-center">
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
       <p className="text-sm text-zinc-500 mb-4">Contact</p>
       <h2 className="text-5xl font-bold mb-16 max-w-xl">
         Vamos conversar sobre seu próximo projeto.
@@ -92,7 +101,8 @@ function Contact() {
         {status === "error" && (
           <p className="text-sm text-red-500">Algo deu errado. Tenta de novo ou manda um email direto.</p>
         )}
-      </form>
+        </form>
+      </motion.div>
     </section>
   );
 }

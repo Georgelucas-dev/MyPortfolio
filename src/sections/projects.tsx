@@ -1,4 +1,7 @@
 // sections/projects.tsx
+
+import { motion } from "motion/react";
+
 interface Project {
   title: string;
   description: string;
@@ -32,7 +35,16 @@ const projects: Project[] = [
 
 function Projects() {
   return (
-    <section className="min-h-screen bg-zinc-100 text-black px-10 py-24">
+    <section id="projects" className="min-h-screen bg-zinc-100 text-black px-10 py-24">
+
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.5 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+
       <p className="text-4xl text-zinc-500 mb-16">Projects</p>
 
       <div className="grid grid-cols-2 gap-x-16 gap-y-20">
@@ -56,7 +68,8 @@ function Projects() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
