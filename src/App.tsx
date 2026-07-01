@@ -5,11 +5,11 @@ import {
 } from "@/components/animate-ui/components/animate/cursor";
 import Footer from "./sections/footer";
 import Hero from "./sections/hero";
-import About from "./sections/about";
+import About from "./sections/about/about";
 import Projects from "./sections/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar/navbar";
 
 function App() {
   return (
@@ -25,8 +25,8 @@ function App() {
             <About />
             <Projects />
             <Contact />
+            <Footer />
           </main>
-          <Footer />
         </div>
       </CursorProvider>
     </ThemeProvider>

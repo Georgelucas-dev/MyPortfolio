@@ -35,7 +35,7 @@ const projects: Project[] = [
 
 function Projects() {
   return (
-    <section id="projects" className="min-h-screen bg-background text-foreground font-sans px-30 py-24">
+    <section id="projects" className="min-h-screen bg-background text-foreground font-sans lg:px-30 px-6 py-24">
 
       <motion.div
         className="w-full"
@@ -47,7 +47,7 @@ function Projects() {
 
       <p className="text-4xl text-zinc-500 mb-16">Projects</p>
 
-      <div className="grid grid-cols-2 gap-x-16 gap-y-20">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-16 gap-y-20">
         {projects.map((project) => (
           <div key={project.title} className="group cursor-pointer">
             <div className="flex items-baseline justify-between mb-3 border-b-2 border-zinc-300 pb-3">

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 function About() {
   return (
-    <section id="about" className="min-h-screen bg-background text-foreground font-sans flex items-center">
+    <section className="min-h-screen bg-background text-foreground font-sans flex items-center">
       <motion.div
         className="w-full"
         initial={{ opacity: 0, y: 50 }}
@@ -22,7 +22,7 @@ function About() {
 
           {/* linha 2 — título */}
           <div className="col-span-2 px-10 pt-10 pb-8 border-b-2 border-r-2 border-zinc-300">
-            <p className="text-base mb-3">Hello,</p>
+            <p className="text-base mb-3">A little about me</p>
             <h1 className="text-8xl font-bold leading-none">
               I'm George<span className="text-blue-500">*</span>
             </h1>

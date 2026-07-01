@@ -31,7 +31,7 @@ function Contact() {
   };
 
   return (
-    <section id="contact" className="min-h-screen bg-background text-foreground font-sans px-30 py-24 flex flex-col justify-center">
+    <section id="contact" className="min-h-screen bg-background text-foreground font-sans lg:px-30 px-6 py-24 flex flex-col justify-center">
       <motion.div
         className="w-full"
         initial={{ opacity: 0, y: 50 }}

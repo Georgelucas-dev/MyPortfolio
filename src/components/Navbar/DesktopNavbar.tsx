@@ -4,7 +4,7 @@ import { House, User, FolderGit2, Mail } from "lucide-react";
 import { useHero } from "@/context/HeroContext";
 import { motion } from "motion/react";
 
-function Navbar() {
+function DesktopNavbar() {
   const links = [
     {
       label: "Home",
@@ -103,4 +103,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default DesktopNavbar;
