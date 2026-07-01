@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 function About() {
   return (
-    <section className="min-h-screen bg-zinc-100 text-black flex items-center">
+    <section id="about" className="min-h-screen bg-background text-foreground font-sans flex items-center">
       <motion.div
         className="w-full"
         initial={{ opacity: 0, y: 50 }}
@@ -79,7 +79,7 @@ function About() {
           </div>
 
           {/* linha 4 — notas de rodapé */}
-          <div className="col-span-3 px-10 py-6 border-t-2 border-r-2 border-zinc-300">
+          <div className="col-span-3 px-30 py-6 border-t-2 border-r-2 border-zinc-300">
             <p className="text-xl text-blue-500 mb-1">
               * dev focused in building real projects, not just theory.
             </p>

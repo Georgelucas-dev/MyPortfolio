@@ -1,11 +1,41 @@
 // sections/hero.tsx
 import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
+import { useHero } from "@/context/HeroContext";
 
 function Hero() {
+  const heroRef = useRef<HTMLElement | null>(null);
+
+  const { setHeroVisivel } = useHero();
+
+  useEffect(() => {
+    const elemento = heroRef.current;
+
+    if (!elemento) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHeroVisivel(entry.isIntersecting);
+      },
+      {
+        threshold: 0.35,
+      },
+    );
+
+    observer.observe(elemento);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [setHeroVisivel]);
+
   return (
     <section
       id="home"
-      className="flex flex-col bg-zinc-100 h-screen text-black"
+      ref={heroRef}
+      className="flex flex-col bg-background h-screen text-foreground font-sans"
     >
       <div className="flex flex-row px-10 h-full justify-center">
         <div className="flex flex-col justify-center font-extrabold">

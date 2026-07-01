@@ -35,7 +35,7 @@ const projects: Project[] = [
 
 function Projects() {
   return (
-    <section id="projects" className="min-h-screen bg-zinc-100 text-black px-10 py-24">
+    <section id="projects" className="min-h-screen bg-background text-foreground font-sans px-30 py-24">
 
       <motion.div
         className="w-full"

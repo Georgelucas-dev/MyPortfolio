@@ -31,7 +31,7 @@ function Contact() {
   };
 
   return (
-    <section id="contact" className="min-h-screen bg-zinc-100 text-black px-10 py-24 flex flex-col justify-center">
+    <section id="contact" className="min-h-screen bg-background text-foreground font-sans px-30 py-24 flex flex-col justify-center">
       <motion.div
         className="w-full"
         initial={{ opacity: 0, y: 50 }}
@@ -39,13 +39,13 @@ function Contact() {
         viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-      <p className="text-sm text-zinc-500 mb-4">Contact</p>
+      <p className="text-4xl text-zinc-500 mb-4">Contact</p>
       <h2 className="text-5xl font-bold mb-16 max-w-xl">
         Vamos conversar sobre seu próximo projeto.
       </h2>
 
       <form onSubmit={handleSubmit} className="max-w-xl flex flex-col gap-8">
-        <div className="flex flex-col gap-2 border-b border-zinc-300 pb-2">
+        <div className="flex flex-col gap-2 border-b-2 border-zinc-300 pb-2">
           <label htmlFor="name" className="text-xs text-zinc-500">
             Nome
           </label>
@@ -59,7 +59,7 @@ function Contact() {
           />
         </div>
 
-        <div className="flex flex-col gap-2 border-b border-zinc-300 pb-2">
+        <div className="flex flex-col gap-2 border-b-2 border-zinc-300 pb-2">
           <label htmlFor="email" className="text-xs text-zinc-500">
             Email
           </label>
@@ -73,7 +73,7 @@ function Contact() {
           />
         </div>
 
-        <div className="flex flex-col gap-2 border-b border-zinc-300 pb-2">
+        <div className="flex flex-col gap-2 border-b-2 border-zinc-300 pb-2">
           <label htmlFor="message" className="text-xs text-zinc-500">
             Mensagem
           </label>
@@ -90,7 +90,7 @@ function Contact() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="self-start text-sm border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors disabled:opacity-50"
+          className="self-start text-sm border-b-2 border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors disabled:opacity-50"
         >
           {status === "sending" ? "Enviando..." : "Enviar mensagem →"}
         </button>
