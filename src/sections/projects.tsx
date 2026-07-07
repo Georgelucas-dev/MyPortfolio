@@ -11,23 +11,16 @@ interface Project {
 
 const projects: Project[] = [
   {
-    title: "Pitaya",
-    description:
-      "Full-stack voice assistant with AI, local TTS, and terminal-based agent routing.",
-    year: "2026",
-    tags: ["Node", "React", "PostgreSQL"],
-  },
-  {
     title: "BancoJS",
     description:
-      "Object-oriented banking system built as a mentoring exercise in JavaScript.",
+      "Sistema bancário orientado a objetos construído como exercício de mentoria em JavaScript.",
     year: "2025",
     tags: ["JavaScript", "OOP"],
   },
   {
     title: "Este portfolio",
     description:
-      "The website you’re looking at right now — a minimalist layout built from scratch.",
+      "O website que você está vendo agora — um layout minimalista construído do zero.",
     year: "2026",
     tags: ["React", "Tailwind"],
   },
@@ -46,7 +39,7 @@ function Projects() {
         viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <p className="text-4xl text-zinc-500 mb-16">Projects</p>
+        <p className="text-4xl text-zinc-500 mb-16">Projetos</p>
 
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-16 gap-y-20">
           {projects.map((project) => (

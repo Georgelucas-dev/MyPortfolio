@@ -10,7 +10,7 @@ export default function errorMiddleware(
   if (err instanceof ZodError) {
     return res.status(400).json({
       success: false,
-      message: "Validation failed",
+      message: "Validação falhou",
       errors: err.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -21,6 +21,6 @@ export default function errorMiddleware(
   console.error(err);
   return res.status(500).json({
     success: false,
-    message: err instanceof Error ? err.message : "Internal server error",
+    message: err instanceof Error ? err.message : "Erro interno do servidor",
   });
 }

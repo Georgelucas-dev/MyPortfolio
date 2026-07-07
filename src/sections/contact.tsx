@@ -46,14 +46,14 @@ function Contact() {
 
       if (response.ok) {
         setStatus("sent");
-        setMessage("Message sent. I’ll get back to you soon.");
+        setMessage("Mensagem enviada. Vou responder em breve.");
         if (e.currentTarget) {
           e.currentTarget.reset();
         }
       } else {
         setStatus("error");
         setMessage(
-          "Sorry, your message could not be sent right now. Please try again later or contact me directly.",
+          "Desculpe, sua mensagem não pôde ser enviada agora. Por favor, tente novamente mais tarde ou entre em contato comigo diretamente.",
         );
         console.error(
           "Contact form submission failed:",
@@ -63,7 +63,7 @@ function Contact() {
     } catch (error) {
       setStatus("error");
       setMessage(
-        "Sorry, your message could not be sent right now. Please try again later or contact me directly.",
+        "Desculpe, sua mensagem não pôde ser enviada agora. Por favor, tente novamente mais tarde ou entre em contato comigo diretamente.",
       );
       console.error("Contact form submission error:", error);
     }
@@ -81,15 +81,15 @@ function Contact() {
         viewport={{ once: false, amount: 0.5 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <p className="text-4xl text-zinc-500 mb-4">Contact</p>
+        <p className="text-4xl text-zinc-500 mb-4">Contato</p>
         <h2 className="text-5xl font-bold mb-16 max-w-xl">
-          Let’s talk about your next project.
+          Vamos conversar sobre seu próximo projeto.
         </h2>
 
         <form onSubmit={handleSubmit} className="max-w-xl flex flex-col gap-8">
           <div className="flex flex-col gap-2 border-b-2 border-zinc-300 pb-2">
             <label htmlFor="name" className="text-xs text-zinc-500">
-              Name
+              Nome
             </label>
             <input
               id="name"
@@ -97,7 +97,7 @@ function Contact() {
               type="text"
               required
               className="bg-transparent text-lg outline-none placeholder:text-zinc-400"
-              placeholder="Your name"
+              placeholder="Seu nome"
             />
           </div>
 
@@ -111,13 +111,13 @@ function Contact() {
               type="email"
               required
               className="bg-transparent text-lg outline-none placeholder:text-zinc-400"
-              placeholder="you@email.com"
+              placeholder="voce@email.com"
             />
           </div>
 
           <div className="flex flex-col gap-2 border-b-2 border-zinc-300 pb-2">
             <label htmlFor="message" className="text-xs text-zinc-500">
-              Message
+              Mensagem
             </label>
             <textarea
               id="message"
@@ -125,7 +125,7 @@ function Contact() {
               required
               rows={3}
               className="bg-transparent text-lg outline-none resize-none placeholder:text-zinc-400"
-              placeholder="Tell me a little about the project..."
+              placeholder="Me conte um pouco sobre o projeto..."
             />
           </div>
 
@@ -134,7 +134,7 @@ function Contact() {
             disabled={status === "sending"}
             className="self-start text-sm border-b-2 border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors disabled:opacity-50"
           >
-            {status === "sending" ? "Sending..." : "Send message →"}
+            {status === "sending" ? "Enviando..." : "Enviar mensagem →"}
           </button>
 
           {status === "sent" && message && (

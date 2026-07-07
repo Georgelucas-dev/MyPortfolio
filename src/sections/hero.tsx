@@ -44,7 +44,7 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            Hello,
+            Olá,
           </motion.p>
 
           <motion.h1
@@ -53,7 +53,7 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
           >
-            I'm George
+            Sou George
           </motion.h1>
 
           <motion.p
@@ -61,7 +61,7 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
           >
-            a software engineer
+            um engenheiro de software
           </motion.p>
         </div>
       </div>

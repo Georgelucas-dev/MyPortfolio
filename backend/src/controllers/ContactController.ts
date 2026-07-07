@@ -10,7 +10,7 @@ export class ContactController {
 
       res
         .status(200)
-        .json({ success: true, message: "Message sent successfully." });
+        .json({ success: true, message: "Mensagem enviada com sucesso." });
     } catch (error) {
       next(error);
     }

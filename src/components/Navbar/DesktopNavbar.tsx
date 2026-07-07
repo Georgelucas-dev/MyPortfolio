@@ -7,22 +7,22 @@ import { motion } from "motion/react";
 function DesktopNavbar() {
   const links = [
     {
-      label: "Home",
+      label: "Início",
       href: "#home",
       icon: House,
     },
     {
-      label: "About",
+      label: "Sobre",
       href: "#about",
       icon: User,
     },
     {
-      label: "Projects",
+      label: "Projetos",
       href: "#projects",
       icon: FolderGit2,
     },
     {
-      label: "Contact",
+      label: "Contato",
       href: "#contact",
       icon: Mail,
     },
@@ -78,10 +78,7 @@ function DesktopNavbar() {
           );
         })}
 
-        <button
-          onClick={toggleTheme}
-          className="flex items-center gap-3"
-        >
+        <button onClick={toggleTheme} className="flex items-center gap-3">
           {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
           <motion.span
             animate={{
@@ -93,7 +90,7 @@ function DesktopNavbar() {
             }}
             className="whitespace-nowrap"
           >
-            {theme === "light" ? "Dark" : "Light"}
+            {theme === "light" ? "Escuro" : "Claro"}
           </motion.span>
         </button>
       </ul>

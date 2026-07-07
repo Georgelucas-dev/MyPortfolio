@@ -5,9 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 
 function MobileAbout() {
   return (
-    <section
-      className="min-h-screen bg-background text-foreground px-8 py-20"
-    >
+    <section className="min-h-screen bg-background text-foreground px-8 py-20">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -16,21 +14,21 @@ function MobileAbout() {
         className="mx-auto max-w-md"
       >
         <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-8">
-          About
+          Sobre
         </p>
 
-        <p className="text-lg font-medium mb-2">A little about me</p>
+        <p className="text-lg font-medium mb-2">Um pouco sobre mim</p>
 
         <h1 className="text-5xl font-extrabold leading-none mb-6">
-          I'm George
+          Sou George
           <span className="text-blue-500">*</span>
         </h1>
 
         <p className="text-muted-foreground leading-8 text-lg">
-          Hi! I'm George Lucas, a Software Engineering student and LLM
-          enthusiast. I love building real-world projects, learning new
-          technologies and creating software that solves problems in a simple
-          and elegant way.
+          Oi! Sou George Lucas, estudante de Engenharia de Software e entusiasta
+          de LLM. Adoro construir projetos do mundo real, aprender novas
+          tecnologias e criar software que resolve problemas de forma simples e
+          elegante.
         </p>
 
         <div className="h-px bg-border my-10" />
@@ -40,7 +38,7 @@ function MobileAbout() {
             href="#projects"
             className="flex items-center justify-between text-lg font-medium"
           >
-            View Projects
+            Ver Projetos
             <ArrowUpRight size={20} />
           </a>
 
@@ -48,7 +46,7 @@ function MobileAbout() {
             href="#contact"
             className="flex items-center justify-between text-lg font-medium"
           >
-            Contact Me
+            Envie uma Mensagem
             <ArrowUpRight size={20} />
           </a>
         </div>
@@ -84,11 +82,11 @@ function MobileAbout() {
 
         <div className="mt-12 space-y-2">
           <p className="text-sm text-blue-500">
-            * Focused on building real projects, not only studying theory.
+            * Focado em construir projetos reais, não apenas estudar teoria.
           </p>
 
           <p className="text-sm text-blue-500">
-            ** Passionate about AI, LLMs and modern web development.
+            ** Apaixonado por IA, LLMs e desenvolvimento web moderno.
           </p>
         </div>
       </motion.div>
