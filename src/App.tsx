@@ -10,6 +10,7 @@ import Projects from "./sections/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
+import Skills from "./sections/skills";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Navbar />
             <Hero />
             <About />
+            <Skills />
             <Projects />
             <Contact />
             <Footer />
