@@ -1,75 +1,78 @@
-# React + TypeScript + Vite
+# Portfolio - George Lucas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive portfolio website built with React, TypeScript, and Vite. Features a sleek dark/light theme toggle, smooth animations, and a fully functional contact form with backend email integration.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Responsive Design**: Optimized for desktop and mobile devices with adaptive navigation
+- **Theme Toggle**: Dark/Light mode support with persistent user preference
+- **Smooth Animations**: Fluid transitions and interactive UI elements powered by Motion
+- **Contact Form**: Fully functional email contact system with backend integration
+- **Modern Stack**: Built with React 18, TypeScript, and Vite for optimal performance
+- **Accessible Navigation**: Fixed navigation bars for desktop and mobile
+- **Mobile-Optimized**: Bottom navigation bar for mobile devices with smooth scrolling
 
-## React Compiler
+## Sections
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Hero**: Eye-catching introduction with animated branding
+- **About**: Personal background and professional overview
+- **Skills**: Technical expertise and competencies
+- **Projects**: Portfolio of completed work and projects
+- **Contact**: Get in touch with email form integration
+- **Footer**: Social links and additional information
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Motion (animations)
+- Lucide React (icons)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Backend
+- Node.js/Express
+- TypeScript
+- Email service integration
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+- Node.js 16+ 
+- npm or yarn
 
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Start the development server:
+```bash
+npm run dev
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3. Build for production:
+```bash
+npm run build
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
 
 ```
+src/
+├── components/      # Reusable React components
+├── sections/        # Page sections (Hero, About, Projects, etc.)
+├── context/         # React context for theme and hero state
+├── hooks/           # Custom React hooks
+├── lib/             # Utility functions
+└── assets/          # Images and static files
+
+backend/            # Express server and email integration
+```
+
+## License
+
+© 2024 George Lucas. All rights reserved.
