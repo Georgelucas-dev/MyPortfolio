@@ -15,14 +15,15 @@ function ProjectCard({ project }: Props) {
   });
 
   const bgY = useTransform(scrollYProgress, [0, 1], [80, -80]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const heroImage =
+    project.sections[0]?.mobileImage ?? project.sections[0]?.desktopImage ?? "";
 
   return (
     <motion.article ref={ref} className="group mb-32 last:mb-0">
       <div className="relative overflow-hidden rounded-3xl aspect-video flex items-center justify-center">
         {/* Fundo */}
         <motion.img
-          src={project.image}
+          src={heroImage}
           alt=""
           aria-hidden
           style={{ y: bgY }}
@@ -40,7 +41,7 @@ function ProjectCard({ project }: Props) {
 
         {/* Frente */}
         <img
-          src={project.image}
+          src={heroImage}
           alt={project.title}
           className="
       relative
