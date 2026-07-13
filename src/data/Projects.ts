@@ -1,6 +1,8 @@
 export interface ProjectSection {
   desktopImage: string;
   mobileImage: string;
+  backgroundImage?: string;
+  backgroundImageMobile?: string;
 }
 
 export interface Project {
@@ -25,16 +27,26 @@ export const projectsData: Project[] = [
     // TODO: trocar pelos prints reais de cada seção (desktop + mobile)
     sections: [
       {
-        desktopImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-hero-desktop.webp",
-        mobileImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-hero-mobile.webp",
+        desktopImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-hero-desktop.webp",
+        mobileImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-hero-mobile.webp",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
+      },
+      {
+        desktopImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-services-desktop.png",
+        mobileImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-services-mobile.png",
+        backgroundImage: "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile: "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
       {
         desktopImage: "src/assets/projects/psychologist-template.webp",
         mobileImage: "src/assets/projects/psychologist-template-mobile.webp",
-      },
-      {
-        desktopImage: "src/assets/projects/psychologist-template.webp",
-        mobileImage: "src/assets/projects/psychologist-template-mobile.webp",
+        backgroundImage: "src/assets/projects/psychologist-template.webp",
+        backgroundImageMobile: "src/assets/projects/psychologist-template-mobile.webp",
       },
     ],
   },
@@ -50,14 +62,17 @@ export const projectsData: Project[] = [
       {
         desktopImage: "src/assets/projects/psychologist-template2.webp",
         mobileImage: "src/assets/projects/psychologist-template2.webp",
+        backgroundImage: "src/assets/projects/psychologist-template2.webp",
       },
       {
         desktopImage: "src/assets/projects/psychologist-template2.webp",
         mobileImage: "src/assets/projects/psychologist-template2.webp",
+        backgroundImage: "src/assets/projects/psychologist-template2.webp",
       },
       {
         desktopImage: "src/assets/projects/psychologist-template2.webp",
         mobileImage: "src/assets/projects/psychologist-template2.webp",
+        backgroundImage: "src/assets/projects/psychologist-template2.webp",
       },
     ],
   },

@@ -21,60 +21,62 @@ function ShowcaseRow({ section, index }: RowProps) {
   });
 
   const move = useTransform(scrollYProgress, [0, 1], [28, -28]);
-  const mobileFirst = index % 2 !== 0;
-  const backgroundParallax = index % 2 === 0;
 
-  const backgroundY = backgroundParallax ? move : 0;
-  const foregroundY = backgroundParallax ? 0 : move;
+  const desktopFirst = index % 2 === 0;
+  const backgroundMoves = desktopFirst;
 
   return (
-    <div ref={ref} className="relative overflow-hidden">
-      <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-[1.40fr_0.60fr] lg:gap-6 items-center h-96 lg:h-[500px] xl:h-[600px] 2xl:h-[700px]">
-        <div
-          className={cn(
-            "relative flex h-full items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 sm:px-3 lg:px-4 py-4",
-            index % 2 === 0 ? "lg:order-1" : "lg:order-2",
-          )}
-          style={{ order: index % 2 === 0 ? 1 : 2 }}
-        >
-          <motion.img
-            src={section.desktopImage}
-            alt=""
-            aria-hidden
-            style={{ y: backgroundY, scale: 1.08 }}
-            className="absolute inset-0 h-full w-full object-cover opacity-35 blur-sm"
-          />
+    <div
+      ref={ref}
+      className={cn(
+        "grid grid-cols-1 lg:grid-cols-[1.4fr_0.6fr] gap-4 lg:gap-6",
+        !desktopFirst && "lg:grid-cols-[0.6fr_1.4fr]",
+      )}
+    >
+      {/* Desktop */}
+      <div className="relative flex h-96 lg:h-[500px] xl:h-[600px] 2xl:h-[700px] items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 py-4 lg:px-4">
+        <motion.img
+          src={section.backgroundImage}
+          alt=""
+          aria-hidden
+          style={{
+            y: backgroundMoves ? move : 0,
+            scale: 1.08,
+          }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
 
-          <motion.img
-            src={section.desktopImage}
-            alt=""
-            style={{ y: foregroundY }}
-            className="relative z-10 w-full h-full object-contain"
-          />
-        </div>
+        <motion.img
+          src={section.desktopImage}
+          alt=""
+          style={{
+            y: backgroundMoves ? 0 : move,
+          }}
+          className="relative z-10 h-full w-full object-contain"
+        />
+      </div>
 
-        <div
-          className={cn(
-            "relative flex h-full items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 sm:px-3 lg:px-4 py-4",
-            index % 2 === 0 ? "lg:order-2" : "lg:order-1",
-          )}
-          style={{ order: index % 2 === 0 ? 2 : 1 }}
-        >
-          <motion.img
-            src={section.mobileImage}
-            alt=""
-            aria-hidden
-            style={{ y: backgroundParallax ? 0 : move, scale: 1.08 }}
-            className="absolute inset-0 h-full w-full object-cover opacity-35 blur-sm"
-          />
+      {/* Mobile */}
+      <div className="relative flex h-96 lg:h-[500px] xl:h-[600px] 2xl:h-[700px] items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 py-4 lg:px-4">
+        <motion.img
+          src={section.backgroundImageMobile}
+          alt=""
+          aria-hidden
+          style={{
+            y: backgroundMoves ? 0 : move,
+            scale: 1.08,
+          }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
 
-          <motion.img
-            src={section.mobileImage}
-            alt=""
-            style={{ y: foregroundY }}
-            className="relative z-10 w-full h-full object-contain"
-          />
-        </div>
+        <motion.img
+          src={section.mobileImage}
+          alt=""
+          style={{
+            y: backgroundMoves ? move : 0,
+          }}
+          className="relative z-10 h-full w-full object-contain"
+        />
       </div>
     </div>
   );
