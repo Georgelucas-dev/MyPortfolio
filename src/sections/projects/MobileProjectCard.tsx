@@ -1,56 +1,73 @@
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-import type { Project } from "../../data/Projects";
+import { motion } from "motion/react";
+import { cn } from "../../lib/utils";
+import type { Project, ProjectSection } from "../../data/Projects";
 
 interface Props {
   project: Project;
 }
 
-function ProjectCard({ project }: Props) {
-  const ref = useRef(null);
+interface ShowcaseProps {
+  image: string;
+  variant: "desktop" | "mobile";
+  delay?: number;
+  className?: string;
+}
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+function Showcase({ image, variant, delay = 0, className }: ShowcaseProps) {
+  return (
+    <div
+      className={cn(
+        "flex h-96 items-center justify-center lg:h-125 xl:h-150 2xl:h-175",
+        className,
+      )}
+    >
+      <motion.img
+        src={image}
+        alt=""
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, delay, ease: "easeOut" }}
+        whileHover={{ scale: 1.02 }}
+        className={cn(
+          "h-full object-contain rounded-xl will-change-transform",
+          variant === "desktop" ? "w-[88%]" : "w-[72%]",
+        )}
+      />
+    </div>
+  );
+}
 
-  const bgY = useTransform(scrollYProgress, [0, 1], [80, -80]);
-  const heroImage =
-    project.sections[0]?.mobileImage ?? project.sections[0]?.desktopImage ?? "";
+interface RowProps {
+  section: ProjectSection;
+  index: number;
+}
+
+function ShowcaseRow({ section, index }: RowProps) {
+  const desktopFirst = index % 2 === 0;
 
   return (
-    <motion.article ref={ref} className="group mb-32 last:mb-0">
-      <div className="relative overflow-hidden rounded-3xl aspect-video flex items-center justify-center">
-        {/* Fundo */}
-        <motion.img
-          src={heroImage}
-          alt=""
-          aria-hidden
-          style={{ y: bgY }}
-          className="
-      absolute
-      inset-0
-      w-full
-      h-full
-      object-cover
-      scale-125
-      blur-xl
-      opacity-40
-    "
-        />
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-4 lg:gap-6",
+        desktopFirst
+          ? "lg:grid-cols-[1.4fr_0.6fr]"
+          : "lg:grid-cols-[0.6fr_1.4fr]",
+      )}
+    >
+      <Showcase image={section.desktopImage} variant="desktop" delay={0} />
+      <Showcase image={section.mobileImage} variant="mobile" delay={0.15} />
+    </div>
+  );
+}
 
-        {/* Frente */}
-        <img
-          src={heroImage}
-          alt={project.title}
-          className="
-      relative
-      z-10
-      w-[94%]
-      rounded-2xl
-      shadow-2xl
-    "
-        />
+function ProjectCard({ project }: Props) {
+  return (
+    <article className="group mb-32 last:mb-0">
+      <div className="flex flex-col gap-8">
+        {project.sections.map((section, i) => (
+          <ShowcaseRow key={i} section={section} index={i} />
+        ))}
       </div>
 
       <div className="mt-8 flex flex-col lg:flex-row justify-between items-start gap-10">
@@ -85,7 +102,7 @@ function ProjectCard({ project }: Props) {
           </a>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }
 

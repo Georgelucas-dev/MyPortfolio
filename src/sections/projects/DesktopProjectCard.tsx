@@ -1,4 +1,10 @@
-import { motion, useScroll, useTransform } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+} from "motion/react";
 import { useRef } from "react";
 import { cn } from "../../lib/utils";
 import type { Project, ProjectSection } from "../../data/Projects";
@@ -9,22 +15,22 @@ interface Props {
 }
 
 interface ShowcaseProps {
-  background: string;
   foreground: string;
   backgroundY: MotionValue<number>;
   foregroundY: MotionValue<number>;
   variant: "desktop" | "mobile";
+  gradientDirection: "br" | "tl";
   offsetX?: number;
   offsetY?: number;
   className?: string;
 }
 
 function Showcase({
-  background,
   foreground,
   backgroundY,
   foregroundY,
   variant,
+  gradientDirection,
   offsetX = 0,
   offsetY = 0,
   className,
@@ -32,16 +38,20 @@ function Showcase({
   return (
     <div
       className={cn(
-        "relative flex h-96 items-center justify-center overflow-hidden lg:h-125 xl:h-150 2xl:h-175",
+        "relative flex h-96 items-center justify-center overflow-hidden rounded-2xl lg:h-125 xl:h-150 2xl:h-175",
         className,
       )}
     >
-      <motion.img
-        src={background}
-        alt=""
+      {/* Fundo: gradiente com mais contraste nas bordas pra separar do print claro */}
+      <motion.div
         aria-hidden
         style={{ y: backgroundY }}
-        className="absolute inset-0 w-full h-full object-cover scale-125 will-change-transform"
+        className={cn(
+          "absolute -inset-16 will-change-transform",
+          gradientDirection === "br"
+            ? "bg-linear-to-br from-zinc-200 via-zinc-100 to-zinc-300"
+            : "bg-linear-to-tl from-zinc-300 via-zinc-100 to-zinc-200",
+        )}
       />
 
       <motion.img
@@ -53,7 +63,7 @@ function Showcase({
           marginTop: offsetY,
         }}
         className={cn(
-          "relative z-10 h-full object-contain rounded-xl will-change-transform",
+          "relative z-10 h-[80%] object-contain rounded-xl  will-change-transform",
           variant === "desktop" ? "w-[88%]" : "w-[72%]",
         )}
       />
@@ -64,23 +74,29 @@ function Showcase({
 interface RowProps {
   section: ProjectSection;
   index: number;
-  scrollYProgress: MotionValue<number>;
+  smoothProgress: MotionValue<number>;
+  shouldReduceMotion: boolean;
 }
 
-function ShowcaseRow({ section, index, scrollYProgress }: RowProps) {
+function ShowcaseRow({
+  section,
+  index,
+  smoothProgress,
+  shouldReduceMotion,
+}: RowProps) {
   const desktopFirst = index % 2 === 0;
   const backgroundMoves = desktopFirst;
 
   const backgroundMove = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    backgroundMoves ? [40, -40] : [0, 0],
+    shouldReduceMotion ? [0, 0] : backgroundMoves ? [40, -40] : [0, 0],
   );
 
   const foregroundMove = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    backgroundMoves ? [0, 0] : [70, -70],
+    shouldReduceMotion ? [0, 0] : backgroundMoves ? [0, 0] : [70, -70],
   );
 
   return (
@@ -93,19 +109,19 @@ function ShowcaseRow({ section, index, scrollYProgress }: RowProps) {
       )}
     >
       <Showcase
-        background={section.backgroundImage}
         foreground={section.desktopImage}
         backgroundY={backgroundMove}
         foregroundY={foregroundMove}
         variant="desktop"
+        gradientDirection={desktopFirst ? "br" : "tl"}
       />
 
       <Showcase
-        background={section.backgroundImageMobile}
         foreground={section.mobileImage}
         backgroundY={foregroundMove}
         foregroundY={backgroundMove}
         variant="mobile"
+        gradientDirection={desktopFirst ? "tl" : "br"}
       />
     </div>
   );
@@ -113,10 +129,17 @@ function ShowcaseRow({ section, index, scrollYProgress }: RowProps) {
 
 function ProjectCard({ project }: Props) {
   const ref = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    mass: 0.5,
   });
 
   return (
@@ -127,7 +150,8 @@ function ProjectCard({ project }: Props) {
             key={i}
             section={section}
             index={i}
-            scrollYProgress={scrollYProgress}
+            smoothProgress={smoothProgress}
+            shouldReduceMotion={!!shouldReduceMotion}
           />
         ))}
       </div>
