@@ -2,17 +2,116 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { cn } from "../../lib/utils";
 import type { Project, ProjectSection } from "../../data/Projects";
+import type { MotionValue } from "motion/react";
 
 interface Props {
   project: Project;
 }
 
+interface ShowcaseProps {
+  background: string;
+  foreground: string;
+  backgroundY: MotionValue<number>;
+  foregroundY: MotionValue<number>;
+  variant: "desktop" | "mobile";
+  offsetX?: number;
+  offsetY?: number;
+  className?: string;
+}
+
+function Showcase({
+  background,
+  foreground,
+  backgroundY,
+  foregroundY,
+  variant,
+  offsetX = 0,
+  offsetY = 0,
+  className,
+}: ShowcaseProps) {
+  return (
+    <div
+      className={cn(
+        "relative flex h-96 items-center justify-center overflow-hidden lg:h-125 xl:h-150 2xl:h-175",
+        className,
+      )}
+    >
+      <motion.img
+        src={background}
+        alt=""
+        aria-hidden
+        style={{ y: backgroundY }}
+        className="absolute inset-0 w-full h-full object-cover scale-125 will-change-transform"
+      />
+
+      <motion.img
+        src={foreground}
+        alt=""
+        style={{
+          y: foregroundY,
+          x: offsetX,
+          marginTop: offsetY,
+        }}
+        className={cn(
+          "relative z-10 h-full object-contain rounded-xl will-change-transform",
+          variant === "desktop" ? "w-[88%]" : "w-[72%]",
+        )}
+      />
+    </div>
+  );
+}
+
 interface RowProps {
   section: ProjectSection;
   index: number;
+  scrollYProgress: MotionValue<number>;
 }
 
-function ShowcaseRow({ section, index }: RowProps) {
+function ShowcaseRow({ section, index, scrollYProgress }: RowProps) {
+  const desktopFirst = index % 2 === 0;
+  const backgroundMoves = desktopFirst;
+
+  const backgroundMove = useTransform(
+    scrollYProgress,
+    [0, 1],
+    backgroundMoves ? [40, -40] : [0, 0],
+  );
+
+  const foregroundMove = useTransform(
+    scrollYProgress,
+    [0, 1],
+    backgroundMoves ? [0, 0] : [70, -70],
+  );
+
+  return (
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-4 lg:gap-6",
+        desktopFirst
+          ? "lg:grid-cols-[1.4fr_0.6fr]"
+          : "lg:grid-cols-[0.6fr_1.4fr]",
+      )}
+    >
+      <Showcase
+        background={section.backgroundImage}
+        foreground={section.desktopImage}
+        backgroundY={backgroundMove}
+        foregroundY={foregroundMove}
+        variant="desktop"
+      />
+
+      <Showcase
+        background={section.backgroundImageMobile}
+        foreground={section.mobileImage}
+        backgroundY={foregroundMove}
+        foregroundY={backgroundMove}
+        variant="mobile"
+      />
+    </div>
+  );
+}
+
+function ProjectCard({ project }: Props) {
   const ref = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -20,74 +119,16 @@ function ShowcaseRow({ section, index }: RowProps) {
     offset: ["start end", "end start"],
   });
 
-  const move = useTransform(scrollYProgress, [0, 1], [28, -28]);
-
-  const desktopFirst = index % 2 === 0;
-  const backgroundMoves = desktopFirst;
-
   return (
-    <div
-      ref={ref}
-      className={cn(
-        "grid grid-cols-1 lg:grid-cols-[1.4fr_0.6fr] gap-4 lg:gap-6",
-        !desktopFirst && "lg:grid-cols-[0.6fr_1.4fr]",
-      )}
-    >
-      {/* Desktop */}
-      <div className="relative flex h-96 lg:h-[500px] xl:h-[600px] 2xl:h-[700px] items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 py-4 lg:px-4">
-        <motion.img
-          src={section.backgroundImage}
-          alt=""
-          aria-hidden
-          style={{
-            y: backgroundMoves ? move : 0,
-            scale: 1.08,
-          }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-
-        <motion.img
-          src={section.desktopImage}
-          alt=""
-          style={{
-            y: backgroundMoves ? 0 : move,
-          }}
-          className="relative z-10 h-full w-full object-contain"
-        />
-      </div>
-
-      {/* Mobile */}
-      <div className="relative flex h-96 lg:h-[500px] xl:h-[600px] 2xl:h-[700px] items-center justify-center overflow-hidden border border-zinc-200/80 bg-zinc-100/70 px-2 py-4 lg:px-4">
-        <motion.img
-          src={section.backgroundImageMobile}
-          alt=""
-          aria-hidden
-          style={{
-            y: backgroundMoves ? 0 : move,
-            scale: 1.08,
-          }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-
-        <motion.img
-          src={section.mobileImage}
-          alt=""
-          style={{
-            y: backgroundMoves ? move : 0,
-          }}
-          className="relative z-10 h-full w-full object-contain"
-        />
-      </div>
-    </div>
-  );
-}
-
-function ProjectCard({ project }: Props) {
-  return (
-    <motion.article className="group mb-32 last:mb-0">
+    <motion.article ref={ref} className="group mb-32 last:mb-0">
       <div className="flex flex-col gap-8">
         {project.sections.map((section, i) => (
-          <ShowcaseRow key={i} section={section} index={i} />
+          <ShowcaseRow
+            key={i}
+            section={section}
+            index={i}
+            scrollYProgress={scrollYProgress}
+          />
         ))}
       </div>
 

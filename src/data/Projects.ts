@@ -37,16 +37,24 @@ export const projectsData: Project[] = [
           "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
       {
-        desktopImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-services-desktop.png",
-        mobileImage: "src/assets/projects/psychologist-tamplate1/psychologist-template-services-mobile.png",
-        backgroundImage: "src/assets/projects/psychologist-tamplate1/background.jpg",
-        backgroundImageMobile: "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
+        desktopImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-services-mobile.png",
+        mobileImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-services-desktop.png",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
       {
-        desktopImage: "src/assets/projects/psychologist-template.webp",
-        mobileImage: "src/assets/projects/psychologist-template-mobile.webp",
-        backgroundImage: "src/assets/projects/psychologist-template.webp",
-        backgroundImageMobile: "src/assets/projects/psychologist-template-mobile.webp",
+        desktopImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-about-mobile.png",
+        mobileImage:
+          "src/assets/projects/psychologist-tamplate1/psychologist-template-about-desktop.png",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
     ],
   },
@@ -60,19 +68,32 @@ export const projectsData: Project[] = [
     href: "#",
     sections: [
       {
-        desktopImage: "src/assets/projects/psychologist-template2.webp",
-        mobileImage: "src/assets/projects/psychologist-template2.webp",
-        backgroundImage: "src/assets/projects/psychologist-template2.webp",
+        desktopImage:
+          "src/assets/projects/psychologist-tamplate2/psychologist-template-hero-desktop.webp",
+        mobileImage:
+          "src/assets/projects/psychologist-tamplate2/psychologist-template-hero-mobile.webp",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
       {
-        desktopImage: "src/assets/projects/psychologist-template2.webp",
-        mobileImage: "src/assets/projects/psychologist-template2.webp",
-        backgroundImage: "src/assets/projects/psychologist-template2.webp",
+        desktopImage:
+          "src/assets/projects/psychologist-tamplate2/psychologist-template-services-mobile.webp",
+        mobileImage:
+          "src/assets/projects/psychologist-tamplate2/psychologist-template-services-desktop.webp",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
       {
-        desktopImage: "src/assets/projects/psychologist-template2.webp",
-        mobileImage: "src/assets/projects/psychologist-template2.webp",
-        backgroundImage: "src/assets/projects/psychologist-template2.webp",
+        desktopImage: "src/assets/projects/psychologist-tamplate2/psychologist-template-howitworks-desktop.webp",
+        mobileImage: "src/assets/projects/psychologist-tamplate2/psychologist-template-howitworks-mobile.webp",
+        backgroundImage:
+          "src/assets/projects/psychologist-tamplate1/background.jpg",
+        backgroundImageMobile:
+          "src/assets/projects/psychologist-tamplate1/background-mobile.jpg",
       },
     ],
   },
