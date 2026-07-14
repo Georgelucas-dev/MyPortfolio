@@ -44,7 +44,7 @@ function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative flex flex-col justify-between w-full min-h-[100svh] bg-background text-foreground overflow-hidden px-6 md:px-12 lg:px-50 pt-32 pb-12"
+      className="relative flex flex-col justify-between w-full min-h-[100svh] bg-background text-foreground overflow-hidden px-6 md:px-12 lg:px-50 pt-10 lg:pt-32 pb-12"
     >
       {/* Grid de fundo com máscara para não vazar nas bordas */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] overflow-hidden"></div>
@@ -78,7 +78,7 @@ function Hero() {
         </div>
 
         {/* Nome Massivo - Ajustado para [15vw] no mobile para evitar overflow */}
-        <h1 className="font-display font-extrabold leading-[0.85] tracking-tighter text-[15vw] md:text-[14vw] lg:text-[12vw] uppercase ml-[-0.05em] break-words">
+        <h1 className="font-display font-extrabold leading-[0.85] tracking-tighter text-[15vw] md:text-[14vw] lg:text-[12vw] uppercase ml-[-0.05em] wrap-break-word">
           <div className="overflow-hidden">
             <motion.span
               initial={{ y: "100%" }}
