@@ -1,10 +1,9 @@
+import { useRealTime } from "@/hooks/useRealTime";
+
 function Footer() {
   const year = new Date().getFullYear();
 
-  const time = new Intl.DateTimeFormat("en-GB", {
-    timeStyle: "medium",
-    timeZone: "America/Sao_Paulo",
-  }).format(new Date());
+  const time = useRealTime();
 
   return (
     <footer className="relative mt-40 bg-background pb-32 md:pb-14">
@@ -24,7 +23,7 @@ function Footer() {
                 </h3>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  All Rights Reserved.
+                  Todos os direitos reservados.
                 </p>
               </div>
 
@@ -33,14 +32,14 @@ function Footer() {
                   href="#"
                   className="block transition-opacity hover:opacity-60"
                 >
-                  Privacy Policy
+                  Política de Privacidade
                 </a>
 
                 <a
                   href="#"
                   className="block transition-opacity hover:opacity-60"
                 >
-                  Terms & Conditions
+                  Termos e condições
                 </a>
 
                 <a
@@ -59,12 +58,12 @@ function Footer() {
                   ( ONLINE )
                 </p>
 
-                <p className="mt-2 text-lg">Now, {time} BRT</p>
+                <p className="mt-2 text-lg">Agora, { time } BRT</p>
               </div>
 
               <div className="space-y-1 text-muted-foreground">
-                <p>Mon to Fri, 9AM – 6PM</p>
-                <p>Currently available for selected projects.</p>
+                <p>Seg a Sex, 9AM – 6PM</p>
+                <p>Atualmente disponível para projetos selecionados.</p>
               </div>
             </div>
 
@@ -75,8 +74,8 @@ function Footer() {
               </div>
 
               <div className="space-y-1 font-mono text-sm text-muted-foreground">
-                <p>23.5505° S</p>
-                <p>46.6333° W</p>
+                <p>27° 06' 17" S</p>
+                <p>52° 36' 51" W</p>
               </div>
             </div>
           </div>
