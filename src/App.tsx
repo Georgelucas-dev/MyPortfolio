@@ -11,9 +11,24 @@ import Projects from "./sections/projects/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
-import WhyWorkWithMe from "./sections/whyWorkWithMe";
+
+import { motion, AnimatePresence } from "motion/react";
+
+import Loader from "./components/Loader";
 
 function App() {
+  const [loadingComplete, setLoadingComplete] = useState(false);
+
+  // Opcional: Trava o scroll da página enquanto o loader está ativo
+  useEffect(() => {
+    if (!loadingComplete) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+      window.scrollTo(0, 0); // Garante que a página comece no topo
+    }
+  }, [loadingComplete]);
+
   const [showCursor, setShowCursor] = useState(() => {
     if (typeof window === "undefined") {
       return true;
@@ -47,15 +62,26 @@ function App() {
         ) : null}
 
         <div className="relative">
-          <main>
-            <Navbar />
-            <Hero />
-            <About />
-            <Projects />
-            <WhyWorkWithMe />
-            <Contact />
-            <Footer />
-          </main>
+          {/* O Loader é o único elemento que existe de imediato */}
+          <Loader onComplete={() => setLoadingComplete(true)} />
+
+          {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
+          <AnimatePresence>
+            {loadingComplete && (
+              <motion.main
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <Navbar />
+                <Hero />
+                <About />
+                <Projects />
+                <Contact />
+                <Footer />
+              </motion.main>
+            )}
+          </AnimatePresence>
         </div>
       </CursorProvider>
     </ThemeProvider>
