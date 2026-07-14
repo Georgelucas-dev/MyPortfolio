@@ -16,7 +16,7 @@ function ArrowUpRightIcon() {
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      className="w-6 h-6 md:w-8 md:h-8"
+      className="w-5 h-5 md:w-8 md:h-8"
       aria-hidden
     >
       <path
@@ -72,10 +72,10 @@ function StackCard({ index, total, scrollYProgress, data }: StackCardProps) {
         zIndex: total - index,
         willChange: "transform, opacity",
       }}
-      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(1200px,calc(100%-2rem))] h-[85vh] md:h-[80vh] rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden ${bg}`}
+      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(1200px,calc(100%-2rem))] h-[65vh] md:h-[80vh] rounded-3xl md:rounded-[2.5rem] shadow-2xl overflow-hidden ${bg}`}
     >
       {/* Watermark Gigante - Estilo Editorial */}
-      <div className="absolute -top-12 -right-8 font-display text-[15rem] md:text-[25rem] font-bold text-foreground/3 leading-none select-none pointer-events-none">
+      <div className="absolute -top-6 md:-top-12 -right-4 md:-right-8 font-display text-[10rem] md:text-[25rem] font-bold text-foreground/3 leading-none select-none pointer-events-none">
         {indexStr}
       </div>
 
@@ -84,41 +84,41 @@ function StackCard({ index, total, scrollYProgress, data }: StackCardProps) {
         className="h-full flex flex-col p-6 md:p-12 lg:p-16 relative z-10"
       >
         {/* Cabeçalho do Card (Linha estrutural) */}
-        <div className="flex justify-between items-center border-b border-border/60 pb-6 md:pb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-foreground text-background flex items-center justify-center">
+        <div className="flex justify-between items-center border-b border-border/60 pb-4 md:pb-8">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-foreground text-background flex items-center justify-center">
               <ArrowUpRightIcon />
             </div>
-            <span className="font-mono text-sm md:text-base tracking-[0.2em] uppercase text-muted-foreground">
+            <span className="font-mono text-xs md:text-base tracking-[0.2em] uppercase text-muted-foreground">
               {data.id || `Fase — ${indexStr}`}
             </span>
           </div>
         </div>
 
         {/* Corpo do Card (Grid Assimétrico) */}
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end pt-8 md:pt-0 pb-4">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-end pt-4 md:pt-0 pb-2 md:pb-4">
           
           {/* Lado Esquerdo: Título Massivo */}
           <div className="lg:col-span-7">
-            <h3 className="font-display text-4xl md:text-6xl lg:text-[5rem] leading-[0.95] tracking-tight">
+            <h3 className="font-display text-3xl md:text-6xl lg:text-[5rem] leading-[0.95] tracking-tight">
               {data.title}
             </h3>
           </div>
 
           {/* Lado Direito: Descrição e Detalhes */}
-          <div className="lg:col-span-5 flex flex-col gap-6 md:gap-8">
+          <div className="lg:col-span-5 flex flex-col gap-4 md:gap-8">
             {data.description && (
-              <p className="text-lg md:text-2xl text-muted-foreground font-light leading-relaxed">
+              <p className="text-base md:text-2xl text-muted-foreground font-light leading-relaxed">
                 {data.description}
               </p>
             )}
 
             {/* Tags para adicionar "riqueza" visual */}
-            <ul className="flex flex-wrap gap-2 md:gap-3 mt-2">
+            <ul className="flex flex-wrap gap-2 md:gap-3 mt-1 md:mt-2">
               {tags.map((tag) => (
                 <li
                   key={tag}
-                  className="px-4 py-2 rounded-full border border-border/80 text-[10px] md:text-xs font-mono uppercase tracking-widest text-foreground/70 backdrop-blur-sm"
+                  className="px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border/80 text-[10px] md:text-xs font-mono uppercase tracking-widest text-foreground/70 backdrop-blur-sm"
                 >
                   {tag}
                 </li>

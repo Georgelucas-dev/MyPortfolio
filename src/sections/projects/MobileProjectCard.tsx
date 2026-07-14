@@ -4,103 +4,122 @@ import type { Project, ProjectSection } from "../../data/Projects";
 
 interface Props {
   project: Project;
+  projectIndex: number;
 }
 
-interface ShowcaseProps {
-  image: string;
-  variant: "desktop" | "mobile";
-  delay?: number;
-  className?: string;
-}
-
-function Showcase({ image, variant, delay = 0, className }: ShowcaseProps) {
+function ArrowUpRightIcon() {
   return (
-    <div
-      className={cn(
-        "flex h-96 items-center justify-center lg:h-125 xl:h-150 2xl:h-175",
-        className,
-      )}
-    >
-      <motion.img
-        src={image}
-        alt=""
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6, delay, ease: "easeOut" }}
-        whileHover={{ scale: 1.02 }}
-        className={cn(
-          "h-full object-contain rounded-xl will-change-transform",
-          variant === "desktop" ? "w-[88%]" : "w-[72%]",
-        )}
+    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" aria-hidden>
+      <path
+        d="M7 17L17 7M17 7H7M17 7V17"
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-    </div>
+    </svg>
   );
 }
 
-interface RowProps {
+interface CompositionProps {
   section: ProjectSection;
   index: number;
 }
 
-function ShowcaseRow({ section, index }: RowProps) {
-  const desktopFirst = index % 2 === 0;
+function Composition({ section, index }: CompositionProps) {
+  const flip = index % 2 !== 0;
 
   return (
-    <div
-      className={cn(
-        "grid grid-cols-1 gap-4 lg:gap-6",
-        desktopFirst
-          ? "lg:grid-cols-[1.4fr_0.6fr]"
-          : "lg:grid-cols-[0.6fr_1.4fr]",
-      )}
-    >
-      <Showcase image={section.desktopImage} variant="desktop" delay={0} />
-      <Showcase image={section.mobileImage} variant="mobile" delay={0.15} />
+    <div className="relative px-3">
+      {/* índice fantasma — estrutura real (ordem da narrativa), não decoração */}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute top-0 z-0 select-none font-display text-[5.5rem] sm:text-[6.5rem] leading-none text-sage/15",
+          flip ? "right-2" : "left-2",
+        )}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* Desktop: espia atrás, ângulo leve, imagem inteira (sem crop) */}
+      <motion.img
+        src={section.desktopImage}
+        alt=""
+        initial={{ opacity: 0, x: flip ? -30 : 30, rotate: flip ? -5 : 5 }}
+        whileInView={{ opacity: 1, x: 0, rotate: flip ? -3 : 3 }}
+        viewport={{ once: true, margin: "-15%" }}
+        transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className={cn(
+          "absolute top-10 z-[1] w-[58%] rounded-lg shadow-lg",
+          flip ? "left-0" : "right-0",
+        )}
+      />
+
+      {/* Mobile: na frente, define a altura da composição, sem corte */}
+      <div
+        className={cn(
+          "relative z-10 w-[64%]",
+          flip ? "ml-auto" : "mr-auto",
+        )}
+      >
+        <motion.img
+          src={section.mobileImage}
+          alt=""
+          initial={{ opacity: 0, y: 32, rotate: flip ? 5 : -5 }}
+          whileInView={{ opacity: 1, y: 0, rotate: flip ? 3 : -3 }}
+          viewport={{ once: true, margin: "-15%" }}
+          transition={{
+            duration: 0.7,
+            delay: 0.15,
+            ease: [0.21, 0.47, 0.32, 0.98],
+          }}
+          className="w-full rounded-2xl shadow-2xl ring-1 ring-ink/5"
+        />
+      </div>
     </div>
   );
 }
 
-function ProjectCard({ project }: Props) {
+function ProjectCard({ project, projectIndex }: Props) {
   return (
-    <article className="group mb-32 last:mb-0">
-      <div className="flex flex-col gap-8">
+    <article className="mb-20 last:mb-0">
+      {/* meta do projeto: número, subtítulo, ano */}
+      <div className="flex items-baseline justify-between border-t border-sage/20 pt-4 px-2">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-clay">
+          {String(projectIndex + 1).padStart(2, "0")} · {project.subtitle}
+        </p>
+        <p className="font-mono text-[11px] text-inkSoft">{project.year}</p>
+      </div>
+
+      {/* composições — uma por seção, alternando lado/rotação */}
+      <div className="mt-8 flex flex-col gap-14">
         {project.sections.map((section, i) => (
-          <ShowcaseRow key={i} section={section} index={i} />
+          <Composition key={i} section={section} index={i} />
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col lg:flex-row justify-between items-start gap-10">
-        <div>
-          <p className="text-sm uppercase tracking-[.3em] text-zinc-400">
-            {project.subtitle}
-          </p>
+      {/* título, descrição, tags, cta */}
+      <div className="mt-10 px-2">
+        <h2 className="font-display text-4xl leading-[1.05] text-ink">
+          {project.title}
+        </h2>
 
-          <h2 className="text-5xl font-bold mt-2">{project.title}</h2>
+        <p className="mt-4 text-inkSoft leading-relaxed">
+          {project.description}
+        </p>
 
-          <p className="mt-6 max-w-xl text-zinc-500 leading-8">
-            {project.description}
-          </p>
+        <p className="mt-5 font-mono text-xs uppercase tracking-widest text-clay">
+          {project.tags.join(" · ")}
+        </p>
 
-          <div className="flex flex-wrap gap-3 mt-8">
-            {project.tags.map((tag) => (
-              <span key={tag} className="px-3 py-1 rounded-full border text-sm">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full lg:w-auto lg:text-right">
-          <p className="text-zinc-400">{project.year}</p>
-
-          <a
-            href={project.href}
-            className="mt-6 inline-flex items-center gap-2 text-lg"
-          >
-            Ver projeto →
-          </a>
-        </div>
+        <a
+          href={project.href}
+          className="mt-6 inline-flex items-center gap-2 border-b border-ink pb-1 font-mono text-sm uppercase tracking-widest text-ink"
+        >
+          Ver projeto
+          <ArrowUpRightIcon />
+        </a>
       </div>
     </article>
   );
