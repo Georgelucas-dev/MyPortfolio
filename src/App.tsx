@@ -11,6 +11,7 @@ import Projects from "./sections/projects/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
+import WhyWorkWithMe from "./sections/whyWorkWithMe";
 
 function App() {
   const [showCursor, setShowCursor] = useState(() => {
@@ -51,6 +52,7 @@ function App() {
             <Hero />
             <About />
             <Projects />
+            <WhyWorkWithMe />
             <Contact />
             <Footer />
           </main>

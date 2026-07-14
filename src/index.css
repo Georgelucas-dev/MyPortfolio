@@ -42,6 +42,11 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  /* Novas variáveis do Paper */
+  --color-paper-foreground: var(--paper-foreground);
+  --color-paper: var(--paper);
+
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --radius-sm: calc(var(--radius) * 0.6);
@@ -60,6 +65,11 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
+  /* Cores Paper (Claro) */
+  --paper: oklch(0.99 0 0); /* Tom sutilmente off-white/cinza bem claro */
+  --paper-foreground: oklch(0.145 0 0);
+
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -102,6 +112,12 @@
   /* Popover */
   --popover: oklch(0.2 0.01 260);
   --popover-foreground: oklch(0.96 0.01 260);
+
+  /* Cores Paper (Escuro) */
+  --paper: oklch(
+    0.15 0.01 260
+  ); /* Um tom levemente diferente do card/background para criar hierarquia */
+  --paper-foreground: oklch(0.96 0.01 260);
 
   /* Cor principal */
   --primary: oklch(0.96 0.01 260);
@@ -157,5 +173,21 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  /* Estilo base estrutural para Card */
+  .bg-card {
+    background-color: var(--color-card);
+    color: var(--color-card-foreground);
+    @apply rounded-xl border border-border shadow-sm;
+  }
+
+  /* Estilo base estrutural para Paper */
+  .bg-paper {
+    background-color: var(--color-paper);
+    color: var(--color-paper-foreground);
+    @apply rounded-md border border-border shadow-md;
   }
 }

@@ -48,6 +48,7 @@ function DesktopNavbar() {
     top-0
     h-screen
     flex
+    z-9999
     items-center
     overflow-hidden
   "
