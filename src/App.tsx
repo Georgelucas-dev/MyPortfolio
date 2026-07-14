@@ -11,10 +11,12 @@ import Projects from "./sections/projects/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
-
+import WhyWorkWithMe from "./sections/whyWorkWithMe";
 import { motion, AnimatePresence } from "motion/react";
 
 import Loader from "./components/Loader";
+
+import ScatterTextSection from "./sections/ScatterReveal";
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
@@ -75,8 +77,10 @@ function App() {
               >
                 <Navbar />
                 <Hero />
+                <ScatterTextSection/>
                 <About />
                 <Projects />
+                <WhyWorkWithMe/>
                 <Contact />
                 <Footer />
               </motion.main>

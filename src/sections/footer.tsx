@@ -2,7 +2,6 @@ import { useRealTime } from "@/hooks/useRealTime";
 
 function Footer() {
   const year = new Date().getFullYear();
-
   const time = useRealTime();
 
   return (
@@ -58,7 +57,7 @@ function Footer() {
                   ( ONLINE )
                 </p>
 
-                <p className="mt-2 text-lg">Agora, { time } BRT</p>
+                <p className="mt-2 text-lg">Agora, {time} BRT</p>
               </div>
 
               <div className="space-y-1 text-muted-foreground">
@@ -81,21 +80,26 @@ function Footer() {
           </div>
 
           {/* Nome */}
-          <div className="relative h-24 md:h-40 overflow-hidden border-t border-border/60 flex justify-center items-end">
+          <div 
+            className="relative w-full overflow-hidden border-t border-border/60 pt-6 md:pt-10"
+            style={{ containerType: "inline-size" }}
+          >
             <h1
               className="
-      whitespace-nowrap
-      font-black
-      uppercase
-      leading-none
-      tracking-[-0.08em]
-
-      text-[20vw]
-      md:text-[11vw]
-
-      mb-[-0.45em]
-      md:mb-[-0.5em]
-    "
+                w-full
+                text-center
+                whitespace-nowrap
+                font-black
+                uppercase
+                leading-none
+                tracking-[-0.08em]
+                
+                /* Tamanho dinâmico baseado na largura do contêiner e não da tela */
+                text-[14.2cqw]
+                
+                /* Empurra o texto para baixo para criar o efeito de corte na base */
+                translate-y-[35%]
+              "
             >
               GEORGE&nbsp;LUCAS
             </h1>
