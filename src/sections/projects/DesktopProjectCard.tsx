@@ -38,7 +38,7 @@ function Showcase({
   return (
     <div
       className={cn(
-        "relative flex h-96 items-center justify-center overflow-hidden rounded-2xl lg:h-125 xl:h-150 2xl:h-175",
+        "relative flex h-96 items-center justify-center overflow-hidden lg:h-125 xl:h-150 2xl:h-175",
         className,
       )}
     >
@@ -49,8 +49,8 @@ function Showcase({
         className={cn(
           "absolute -inset-16 will-change-transform",
           gradientDirection === "br"
-            ? "bg-linear-to-br from-zinc-200 via-zinc-100 to-zinc-300"
-            : "bg-linear-to-tl from-zinc-300 via-zinc-100 to-zinc-200",
+            ? "bg-linear-to-br from-zinc-400 via-zinc-100 to-zinc-500"
+            : "bg-linear-to-tl from-zinc-500 via-zinc-200 to-zinc-400",
         )}
       />
 
@@ -63,7 +63,7 @@ function Showcase({
           marginTop: offsetY,
         }}
         className={cn(
-          "relative z-10 h-[80%] object-contain rounded-xl  will-change-transform",
+          "relative z-10 h-[80%] object-contain  will-change-transform",
           variant === "desktop" ? "w-[88%]" : "w-[72%]",
         )}
       />
@@ -102,7 +102,7 @@ function ShowcaseRow({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-4 lg:gap-6",
+        "grid grid-cols-1 gap-2 lg:gap-4",
         desktopFirst
           ? "lg:grid-cols-[1.4fr_0.6fr]"
           : "lg:grid-cols-[0.6fr_1.4fr]",
@@ -144,7 +144,7 @@ function ProjectCard({ project }: Props) {
 
   return (
     <motion.article ref={ref} className="group mb-32 last:mb-0">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         {project.sections.map((section, i) => (
           <ShowcaseRow
             key={i}
