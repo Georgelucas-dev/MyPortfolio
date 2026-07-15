@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// src/sections/whyWorkWithMe/pillar-details.tsx
 import type { Pillar } from "../../data/pillars-data";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -10,33 +10,32 @@ interface PillarDetailsProps {
 export function PillarDetails({ pillars, activeIndex }: PillarDetailsProps) {
   const activePillar = pillars[activeIndex];
 
-  // Pré-carrega todas as imagens uma vez
-  useEffect(() => {
-    pillars.forEach((pillar) => {
-      const img = new Image();
-      img.src = pillar.image;
-    });
-  }, [pillars]);
+  // REMOVEMOS O useEffect DAQUI!
+  // As imagens já foram decodificadas globalmente.
 
   if (!activePillar) return null;
 
   return (
     <div className="col-span-12 md:col-span-5 flex flex-col justify-center h-[50svh] md:h-full py-8 md:py-16 pr-0 md:pr-10 lg:pr-16 pt-8 md:pt-0">
       <div className="flex flex-col gap-6 md:gap-10 w-full">
-        {/* IMAGEM: Adicionado mt-6 md:mt-8 para dar um respiro no topo */}
+        {/* IMAGEM */}
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-zinc-900 border border-border/50 shadow-2xl shrink-0 mt-6 md:mt-8">
-          {pillars.map((pillar, i) => (
-            <motion.img
-              key={pillar.id}
-              src={pillar.image}
-              alt={pillar.title}
-              loading="eager"
-              decoding="async"
-              animate={{ opacity: i === activeIndex ? 1 : 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute inset-0 h-full w-full object-cover brightness-[0.85] contrast-[1.05] will-change-transform pointer-events-none"
-            />
-          ))}
+          {pillars.map((pillar, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <motion.img
+                key={pillar.id}
+                src={pillar.image}
+                alt={pillar.title}
+                loading="eager"
+                initial={{ opacity: isActive ? 1 : 0 }}
+                animate={{ opacity: isActive ? 1 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                style={{ zIndex: isActive ? 10 : 1 }}
+                className="absolute inset-0 h-full w-full object-cover brightness-[0.85] contrast-[1.05] pointer-events-none will-change-[opacity] transform-gpu"
+              />
+            );
+          })}
         </div>
 
         {/* CONTAINER DE TEXTO */}

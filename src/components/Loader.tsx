@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
+// Importe a função que criamos (ajuste o caminho da pasta se necessário)
+import { preloadPillarImages } from "../utils/preload-images";
+
 interface LoaderProps {
   onComplete: () => void;
 }
@@ -10,41 +13,49 @@ export default function Loader({ onComplete }: LoaderProps) {
   const [progress, setProgress] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  // Lógica do contador (simulando um carregamento)
   useEffect(() => {
+    // Flag invisível que avisa quando a placa de vídeo está pronta
+    let isGpuReady = false;
+
+    // 1. Dispara a decodificação em background assim que o Loader monta
+    preloadPillarImages().then(() => {
+      isGpuReady = true;
+    });
+
     let currentProgress = 0;
 
-    // Aumenta o progresso de forma orgânica e não linear
     const interval = setInterval(() => {
+      // 2. A MÁGICA: Se as imagens não decodificaram, o máximo é 99.
+      // Se já decodificaram, o teto sobe para 100.
+      const maxLimit = isGpuReady ? 100 : 99;
+
       currentProgress += Math.floor(Math.random() * 15) + 1;
 
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        setProgress(currentProgress);
+      if (currentProgress >= maxLimit) {
+        currentProgress = maxLimit;
+      }
+
+      setProgress(currentProgress);
+
+      // 3. Só inicia a saída do Loader se chegar de fato aos 100%
+      if (currentProgress === 100) {
         clearInterval(interval);
 
-        // Aguarda um instante em 100% antes de iniciar a saída
         setTimeout(() => {
           setIsFinished(true);
         }, 600);
-      } else {
-        setProgress(currentProgress);
       }
-    }, 100); // Velocidade do contador
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Curva de animação Premium (usada por estúdios high-end)
   const curve = [0.76, 0, 0.24, 1];
 
   return (
-    <AnimatePresence
-      onExitComplete={onComplete} // Avisa o app que a animação de saída acabou
-    >
+    <AnimatePresence onExitComplete={onComplete}>
       {!isFinished && (
         <motion.div
-          // A tela inteira vai deslizar para cima no final
           initial={{ y: 0 }}
           exit={{ y: "-100%" }}
           transition={{ duration: 1.2, ease: curve }}
@@ -56,9 +67,8 @@ export default function Loader({ onComplete }: LoaderProps) {
             <span>© 2026</span>
           </div>
 
-          {/* Centro: Nome com efeito Reveal (Máscara) */}
+          {/* Centro: Nome com efeito Reveal */}
           <div className="flex flex-col items-center justify-center flex-1 w-full gap-2 md:gap-0">
-            {/* Primeira palavra: GEORGE */}
             <div className="overflow-hidden">
               <motion.h1
                 initial={{ y: "100%" }}
@@ -70,7 +80,6 @@ export default function Loader({ onComplete }: LoaderProps) {
               </motion.h1>
             </div>
 
-            {/* Segunda palavra: LUCAS */}
             <div className="overflow-hidden">
               <motion.h1
                 initial={{ y: "100%" }}

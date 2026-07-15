@@ -7,7 +7,7 @@ import { PillarList } from "./pillar-list";
 import { MobileAccordion } from "./mobile-accordion";
 
 const MOBILE_QUERY = "(max-width: 767px)"; // espelha o breakpoint md: do Tailwind
-const VH_PER_ITEM = 35; // 8 itens * 56.25 = 450vh
+const VH_PER_ITEM = 35;
 
 export default function WhyWorkWithMe() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ export default function WhyWorkWithMe() {
           className="relative bg-background w-full"
           style={{ height: `${pillars.length * VH_PER_ITEM}vh` }}
         >
-          <div className="sticky top-0 flex h-[100svh] w-full grid-cols-12 overflow-hidden px-12 lg:px-24 bg-background md:grid">
+          <div className="sticky top-0 flex h-svh w-full grid-cols-12 overflow-hidden px-12 lg:px-24 bg-background md:grid">
             <PillarDetails pillars={pillars} activeIndex={activeIndex} />
             <PillarList
               pillars={pillars}
