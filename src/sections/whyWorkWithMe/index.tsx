@@ -1,23 +1,26 @@
 // src/sections/whyWorkWithMe/index.tsx
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import { useScroll, useSpring, useMotionValueEvent } from "motion/react";
+import { useRef, useState, useEffect } from "react";
+import { useScroll, useMotionValueEvent } from "motion/react";
 import { pillars } from "../../data/pillars-data";
 import { PillarDetails } from "./pillar-details";
 import { PillarList } from "./pillar-list";
 import { MobileAccordion } from "./mobile-accordion";
 
+const MOBILE_QUERY = "(max-width: 767px)"; // espelha o breakpoint md: do Tailwind
+const VH_PER_ITEM = 35; // 8 itens * 56.25 = 450vh
+
 export default function WhyWorkWithMe() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // Verifica se é mobile para renderizar componentes diferentes
   const [isMobile, setIsMobile] = useState(false);
 
-  useLayoutEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_QUERY);
+    setIsMobile(mql.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -25,52 +28,53 @@ export default function WhyWorkWithMe() {
     offset: ["start start", "end end"],
   });
 
-  const smoothScroll = useSpring(scrollYProgress, {
-    stiffness: 70,
-    damping: 30,
-    mass: 1.2,
-  });
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (isMobile) return;
 
-  useMotionValueEvent(smoothScroll, "change", (latest) => {
-    if (isMobile) return; // Desativa cálculos de scroll no mobile
     const calculatedIndex = Math.floor(latest * pillars.length);
     const clampedIndex = Math.max(
       0,
       Math.min(calculatedIndex, pillars.length - 1),
     );
 
-    if (clampedIndex !== activeIndex) {
-      setActiveIndex(clampedIndex);
-    }
+    setActiveIndex((current) =>
+      clampedIndex !== current ? clampedIndex : current,
+    );
   });
 
-  // ====== RENDERIZAÇÃO MOBILE ======
-  if (isMobile) {
-    return (
-      <section className="w-full bg-background min-h-screen">
-        <MobileAccordion pillars={pillars} />
-      </section>
-    );
-  }
-
-  // ====== RENDERIZAÇÃO DESKTOP ======
   const itemHeight = 120;
   const yOffset = ((pillars.length - 1) / 2 - activeIndex) * itemHeight;
 
   return (
-    <section
-      ref={containerRef}
-      className="relative h-[450vh] bg-background w-full"
-    >
-      <div className="sticky top-0 flex h-[100svh] w-full grid-cols-12 overflow-hidden px-12 lg:px-24 bg-background will-change-transform md:grid">
-        <PillarDetails activePillar={pillars[activeIndex]} />
-        <PillarList
-          pillars={pillars}
-          activeIndex={activeIndex}
-          itemHeight={itemHeight}
-          yOffset={yOffset}
-        />
+    <>
+      {/* Título — fora da área travada, sem numeração */}
+      <div className="px-12 lg:px-24 pt-16 pb-8 md:pt-24 md:pb-12 bg-background">
+        <h2 className="font-display text-3xl md:text-5xl font-bold tracking-tight text-foreground">
+          Por que trabalhar comigo
+        </h2>
       </div>
-    </section>
+
+      {isMobile ? (
+        <section className="w-full bg-background min-h-screen">
+          <MobileAccordion pillars={pillars} />
+        </section>
+      ) : (
+        <section
+          ref={containerRef}
+          className="relative bg-background w-full"
+          style={{ height: `${pillars.length * VH_PER_ITEM}vh` }}
+        >
+          <div className="sticky top-0 flex h-[100svh] w-full grid-cols-12 overflow-hidden px-12 lg:px-24 bg-background md:grid">
+            <PillarDetails activePillar={pillars[activeIndex]} />
+            <PillarList
+              pillars={pillars}
+              activeIndex={activeIndex}
+              itemHeight={itemHeight}
+              yOffset={yOffset}
+            />
+          </div>
+        </section>
+      )}
+    </>
   );
 }
