@@ -63,7 +63,7 @@ function Showcase({
           marginTop: offsetY,
         }}
         className={cn(
-          "relative z-10 h-[80%] object-contain  will-change-transform",
+          "relative z-10 h-[80%] object-contain will-change-transform",
           variant === "desktop" ? "w-[88%]" : "w-[72%]",
         )}
       />
@@ -158,19 +158,27 @@ function ProjectCard({ project }: Props) {
 
       <div className="mt-8 flex flex-col lg:flex-row justify-between items-start gap-10">
         <div>
-          <p className="text-sm uppercase tracking-[.3em] text-zinc-400">
+          {/* Padronizado com ink-soft e font-mono */}
+          <p className="font-mono text-sm uppercase tracking-[.3em] text-ink-soft">
             {project.subtitle}
           </p>
 
-          <h2 className="text-5xl font-bold mt-2">{project.title}</h2>
+          {/* Título com a fonte display de impacto */}
+          <h2 className="font-display text-5xl font-bold mt-2 text-ink">
+            {project.title}
+          </h2>
 
-          <p className="mt-6 max-w-xl text-zinc-500 leading-8">
+          {/* Texto corrido com ink-soft */}
+          <p className="mt-6 max-w-xl text-ink-soft leading-8">
             {project.description}
           </p>
 
           <div className="flex flex-wrap gap-3 mt-8">
             {project.tags.map((tag) => (
-              <span key={tag} className="px-3 py-1 rounded-full border text-sm">
+              <span
+                key={tag}
+                className="px-3 py-1 rounded-full border border-border text-ink-soft text-sm"
+              >
                 {tag}
               </span>
             ))}
@@ -178,11 +186,11 @@ function ProjectCard({ project }: Props) {
         </div>
 
         <div className="w-full lg:w-auto lg:text-right">
-          <p className="text-zinc-400">{project.year}</p>
+          <p className="font-mono text-sm text-ink-soft">{project.year}</p>
 
           <a
             href={project.href}
-            className="mt-6 inline-flex items-center gap-2 text-lg"
+            className="mt-6 inline-flex items-center gap-2 text-lg text-ink hover:text-ink-soft transition-colors"
           >
             Ver projeto →
           </a>

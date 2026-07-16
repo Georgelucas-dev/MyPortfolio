@@ -11,7 +11,7 @@ function DesktopProjects() {
         px-6
         py-24
         lg:px-16
-        xl:px-
+        xl:px-30
         2xl:px-32
       "
     >
