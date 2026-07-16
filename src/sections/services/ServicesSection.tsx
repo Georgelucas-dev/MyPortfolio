@@ -41,8 +41,8 @@ export function ServicesSection() {
   };
 
   return (
-    <section className="relative w-full h-[100vh] min-h-[750px] bg-background text-ink py-12 lg:py-16 overflow-hidden flex flex-col justify-between">
-      {/* 1. TOPO: Alinhado para escapar do menu lateral colapsado */}
+    <section className="relative w-full min-h-[100svh] bg-background text-ink py-12 lg:py-16 overflow-hidden flex flex-col justify-between">
+      {/* 1. TOPO */}
       <div className="max-w-[1440px] mx-auto w-full px-6 md:px-12 lg:pl-32 lg:pr-16 xl:pl-40 xl:pr-24 grid grid-cols-12 shrink-0">
         <div className="hidden lg:col-span-1 lg:flex flex-col justify-start">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft origin-left rotate-90 translate-y-24 whitespace-nowrap">
@@ -59,11 +59,17 @@ export function ServicesSection() {
         </div>
       </div>
 
-      {/* 2. CARROSSEL: Herda a margem esquerda dinâmica calculada do título */}
+      {/* 2. CARROSSEL */}
       <div className="w-full flex-1 flex flex-col justify-center my-6 lg:my-0">
         <div
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-4 pr-6 md:pr-16"
+          /* 
+            Mantemos apenas as classes nativas para mobile:
+            - overflow-x-auto: Permite o scroll horizontal
+            - touch-pan-y: Permite scroll vertical da página mesmo tocando no carrossel
+            - overscroll-x-contain: Evita que o swipe vaze e volte a página no iOS
+          */
+          className="flex gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-4 pr-6 md:pr-16 touch-pan-y overscroll-x-contain"
           style={{
             marginLeft: leftOffset !== null ? `${leftOffset}px` : "1.5rem",
             scrollbarWidth: "none",
@@ -79,8 +85,7 @@ export function ServicesSection() {
                 transform: "translateZ(0)",
                 WebkitFontSmoothing: "antialiased",
               }}
-              // Mantido rounded-none e text-white por causa dos gradientes vibrantes
-              className={`snap-start shrink-0 w-[80vw] sm:w-[40vw] lg:w-[25vw] xl:w-[22vw] aspect-[4/5] rounded-none p-6 md:p-8 bg-gradient-to-br ${service.bgGradient} flex flex-col justify-between cursor-pointer group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] shadow-xl will-change-transform origin-center`}
+              className={`snap-start shrink-0 select-none w-[80vw] sm:w-[40vw] lg:w-[25vw] xl:w-[22vw] aspect-[4/5] rounded-none p-6 md:p-8 bg-gradient-to-br ${service.bgGradient} flex flex-col justify-between cursor-pointer group transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] shadow-xl will-change-transform origin-center`}
             >
               <div className="flex justify-end opacity-40 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-500 ease-out text-white">
                 <svg
@@ -112,14 +117,14 @@ export function ServicesSection() {
         </div>
       </div>
 
-      {/* 3. RODAPÉ: Alinhado no mesmo grid do Topo */}
+      {/* 3. RODAPÉ */}
       <div className="max-w-[1440px] mx-auto w-full px-6 md:px-12 lg:pl-32 lg:pr-16 xl:pl-40 xl:pr-24 grid grid-cols-12 pt-6 border-t border-border shrink-0">
         <div className="hidden lg:block lg:col-span-1"></div>
         <div className="col-span-12 lg:col-span-11 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="flex gap-3">
             <button
               onClick={() => scroll("left")}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-none border border-border bg-background flex items-center justify-center hover:bg-accent hover:text-accent-foreground text-ink active:scale-95 transition-all duration-200"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-none border border-border bg-background flex items-center justify-center hover:bg-ink hover:text-background text-ink active:scale-95 transition-all duration-200"
             >
               <svg
                 className="w-5 h-5 md:w-6 md:h-6 rotate-180"
@@ -137,7 +142,7 @@ export function ServicesSection() {
             </button>
             <button
               onClick={() => scroll("right")}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-none border border-border bg-background flex items-center justify-center hover:bg-accent hover:text-accent-foreground text-ink active:scale-95 transition-all duration-200"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-none border border-border bg-background flex items-center justify-center hover:bg-ink hover:text-background text-ink active:scale-95 transition-all duration-200"
             >
               <svg
                 className="w-5 h-5 md:w-6 md:h-6"

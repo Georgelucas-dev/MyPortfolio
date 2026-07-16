@@ -53,7 +53,7 @@ export function MobileAccordion({ pillars }: { pillars: Pillar[] }) {
               >
                 <div className="overflow-hidden">
                   <div className="flex flex-col gap-6 pb-12 pt-4">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900 shrink-0 transform-gpu">
+                    <div className="relative aspect-4/3 w-full overflow-hidden bg-zinc-900 shrink-0 transform-gpu">
                       <img
                         src={pillar.image}
                         alt={pillar.title}

@@ -24,7 +24,7 @@ function MobileNavbar() {
 
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
+      Math.max(y, window.innerHeight - y),
     );
 
     const root = document.documentElement;
@@ -72,7 +72,6 @@ function MobileNavbar() {
           items-center 
           justify-between 
           bg-background/80 
-          dark:bg-zinc-950/80 
           backdrop-blur-xl 
           border 
           border-border/50 
@@ -98,9 +97,10 @@ function MobileNavbar() {
                   w-11 
                   h-11 
                   rounded-full 
-                  text-muted-foreground 
+                  text-ink-soft 
+                  hover:text-ink
                   active:scale-90 
-                  active:bg-foreground/5 
+                  active:bg-ink/5 
                   transition-all
                 "
               >
@@ -122,9 +122,10 @@ function MobileNavbar() {
             w-11 
             h-11 
             rounded-full 
-            text-foreground 
+            text-ink-soft
+            hover:text-ink
             active:scale-90 
-            active:bg-foreground/5
+            active:bg-ink/5
             cursor-pointer 
             transition-all
             pl-2

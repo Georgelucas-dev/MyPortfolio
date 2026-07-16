@@ -43,9 +43,9 @@ function Hero() {
       id="home"
       ref={heroRef}
       /* Espaçamento esquerdo inteligente para desviar do menu expandido (lg:pl-64 xl:pl-72) */
-      className="relative flex flex-col justify-between w-full min-h-[100svh] bg-background text-ink overflow-hidden px-6 md:px-12 lg:pl-64 lg:pr-16 xl:pl-72 xl:pr-24 pt-10 lg:pt-32 pb-12"
+      className="relative flex flex-col justify-between w-full min-h-svh bg-background text-ink overflow-hidden px-6 md:px-12 lg:pl-64 lg:pr-16 xl:pl-72 xl:pr-24 pt-10 lg:pt-32 pb-12"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] overflow-hidden"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] overflow-hidden"></div>
 
       {/* Row 1 */}
       <motion.div 

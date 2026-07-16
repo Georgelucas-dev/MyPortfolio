@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from "react";
 import Footer from "./sections/footer";
 import Hero from "./sections/hero";
-import About from "./sections/about/about";
+import About from "./sections/about";
 import Projects from "./sections/projects/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -79,10 +79,10 @@ function App() {
                 <Navbar />
                 <Hero />
                 <ScatterTextSection />
-                <ServicesSection/>
-                <About />
+                <ServicesSection />
                 <Projects />
-                <WhyWorkWithMe/>
+                <About />
+                <WhyWorkWithMe />
                 <Contact />
                 <Footer />
               </motion.main>

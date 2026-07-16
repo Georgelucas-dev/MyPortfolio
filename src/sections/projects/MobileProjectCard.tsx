@@ -84,7 +84,7 @@ function Lightbox({ src, onClose }: LightboxProps) {
             type="button"
             onClick={onClose}
             aria-label="Fechar"
-            className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-paper/10 text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paper"
+            className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-background/10 text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
           >
             <CloseIcon />
           </button>
@@ -109,8 +109,7 @@ function Composition({ section, index, onOpen }: CompositionProps) {
       <span
         aria-hidden
         className={cn(
-          "absolute top-0 z-0 select-none font-display text-[5.5rem] sm:text-[6.5rem] leading-none text-sage/15",
-          // Afastado levemente da borda para evitar colisão visual
+          "absolute top-0 z-0 select-none font-display text-[5.5rem] sm:text-[6.5rem] leading-none text-ink/10",
           flip ? "right-4" : "left-4",
         )}
       >
@@ -121,14 +120,12 @@ function Composition({ section, index, onOpen }: CompositionProps) {
       <motion.button
         type="button"
         onClick={() => onOpen(section.desktopImage)}
-        // AQUI ESTÁ A MÁGICA: Trocamos o transbordo no eixo X por Y + Scale. Fica mais polido e não quebra.
         initial={{ opacity: 0, y: 20, scale: 0.95, rotate: flip ? -5 : 5 }}
         whileInView={{ opacity: 1, y: 0, scale: 1, rotate: flip ? -3 : 3 }}
         viewport={{ once: true, margin: "-15%" }}
         transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
         className={cn(
-          "absolute top-10 z-[1] w-[58%] cursor-zoom-in appearance-none bg-transparent p-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage",
-          // Afastado 8px (2) das bordas para dar espaço para as quinas rotacionadas
+          "absolute top-10 z-[1] w-[58%] cursor-zoom-in appearance-none bg-transparent p-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border",
           flip ? "left-2" : "right-2",
         )}
       >
@@ -141,15 +138,11 @@ function Composition({ section, index, onOpen }: CompositionProps) {
 
       {/* Mobile: na frente */}
       <div
-        className={cn(
-          "relative z-10 w-[64%]",
-          flip ? "ml-auto" : "mr-auto",
-        )}
+        className={cn("relative z-10 w-[64%]", flip ? "ml-auto" : "mr-auto")}
       >
         <motion.button
           type="button"
           onClick={() => onOpen(section.mobileImage)}
-          // Mesmo tratamento aqui: desliza de baixo para cima ganhando escala
           initial={{ opacity: 0, y: 32, scale: 0.95, rotate: flip ? 5 : -5 }}
           whileInView={{ opacity: 1, y: 0, scale: 1, rotate: flip ? 3 : -3 }}
           viewport={{ once: true, margin: "-15%" }}
@@ -158,7 +151,7 @@ function Composition({ section, index, onOpen }: CompositionProps) {
             delay: 0.15,
             ease: [0.21, 0.47, 0.32, 0.98],
           }}
-          className="block w-full cursor-zoom-in appearance-none bg-transparent p-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
+          className="block w-full cursor-zoom-in appearance-none bg-transparent p-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border"
         >
           <img
             src={section.mobileImage}
@@ -175,15 +168,13 @@ function ProjectCard({ project, projectIndex }: Props) {
   const [openImage, setOpenImage] = useState<string | null>(null);
 
   return (
-    // FIX DE SEGURANÇA: w-full e overflow-x-clip garante 100% que nada vaza nas laterais, mas não quebra o Lightbox
     <article className="mb-20 last:mb-0 w-full overflow-x-clip">
-      
       {/* meta do projeto */}
-      <div className="flex items-baseline justify-between border-t border-sage/20 pt-4 px-2">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-clay">
+      <div className="flex items-baseline justify-between border-t border-border pt-4 px-2">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
           {String(projectIndex + 1).padStart(2, "0")} · {project.subtitle}
         </p>
-        <p className="font-mono text-[11px] text-inkSoft">{project.year}</p>
+        <p className="font-mono text-[11px] text-ink-soft">{project.year}</p>
       </div>
 
       {/* composições */}
@@ -204,17 +195,17 @@ function ProjectCard({ project, projectIndex }: Props) {
           {project.title}
         </h2>
 
-        <p className="mt-4 text-inkSoft leading-relaxed max-w-xl">
+        <p className="mt-4 text-ink-soft leading-relaxed max-w-xl">
           {project.description}
         </p>
 
-        <p className="mt-6 font-mono text-xs uppercase tracking-widest text-clay">
+        <p className="mt-6 font-mono text-xs uppercase tracking-widest text-ink-soft">
           {project.tags.join(" · ")}
         </p>
 
         <a
           href={project.href}
-          className="group mt-8 inline-flex items-center gap-3 border-b border-ink/30 hover:border-ink transition-colors pb-1.5 font-mono text-sm uppercase tracking-widest text-ink"
+          className="group mt-8 inline-flex items-center gap-3 border-b border-border hover:border-ink transition-colors pb-1.5 font-mono text-sm uppercase tracking-widest text-ink"
         >
           Ver projeto
           <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
