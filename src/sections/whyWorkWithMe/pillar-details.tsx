@@ -19,7 +19,7 @@ export function PillarDetails({ pillars, activeIndex }: PillarDetailsProps) {
     <div className="col-span-12 md:col-span-5 flex flex-col justify-center h-[50svh] md:h-full py-8 md:py-16 pr-0 md:pr-10 lg:pr-16 pt-8 md:pt-0">
       <div className="flex flex-col gap-6 md:gap-10 w-full">
         {/* IMAGEM */}
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-zinc-900 border border-border/50 shadow-2xl shrink-0 mt-6 md:mt-8">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900 shadow-2xl shrink-0 mt-6 md:mt-8">
           {pillars.map((pillar, i) => {
             const isActive = i === activeIndex;
             return (
