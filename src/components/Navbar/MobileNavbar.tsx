@@ -1,81 +1,106 @@
-import { House, User, FolderGit2, Mail } from "lucide-react";
-import { motion } from "motion/react";
+// src/components/Navbar/MobileNavbar.tsx
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "motion/react";
+
+const links = [
+  { label: "Início", href: "#home" },
+  { label: "Sobre", href: "#about" },
+  { label: "Projetos", href: "#projects" },
+  { label: "Contato", href: "#contact" },
+];
 
 function MobileNavbar() {
-  const links = [
-    { label: "Início", href: "#home", icon: House },
-    { label: "Sobre", href: "#about", icon: User },
-    { label: "Projetos", href: "#projects", icon: FolderGit2 },
-    { label: "Contato", href: "#contact", icon: Mail },
-  ];
+  const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
 
   return (
-    <nav
-      style={{
-        bottom: "calc(1.5rem + env(safe-area-inset-bottom, 0px))",
-      }}
-      className="
-        fixed
-        left-1/2
-        -translate-x-1/2
-        z-[9999]
-        w-[calc(100%-2rem)]
-        max-w-md
-        md:hidden
-      "
-    >
-      <motion.div
-        initial={{ y: 120, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          type: "spring",
-          mass: 0.8,
-          stiffness: 200,
-          damping: 20,
-          delay: 0.3,
-        }}
-        className="
-          flex 
-          items-center 
-          justify-around 
-          bg-background/80 
-          backdrop-blur-xl 
-          border 
-          border-border/50 
-          rounded-full 
-          px-4 
-          h-16 
-          shadow-[0_8px_32px_rgba(0,0,0,0.5)]
-        "
+    <>
+      <header
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+        className="fixed top-0 inset-x-0 z-[9999] md:hidden bg-background/80 backdrop-blur-xl border-b border-border/50"
       >
-        {links.map((link) => {
-          const Icon = link.icon;
+        <div className="flex items-center justify-between h-16 px-4">
+          <a
+            href="#home"
+            className="font-display text-lg font-bold tracking-tight text-ink"
+          >
+            George Lucas
+          </a>
 
-          return (
+          <div className="flex items-center gap-2">
             <a
-              key={link.href}
-              href={link.href}
-              className="
-                flex 
-                items-center 
-                justify-center 
-                w-11 
-                h-11 
-                rounded-full 
-                text-ink-soft 
-                hover:text-ink
-                active:scale-90 
-                active:bg-ink/5 
-                transition-all
-              "
+              href="#contact"
+              className="px-4 py-1.5 rounded-full border border-ink/20 text-xs text-ink"
             >
-              <Icon size={20} className="stroke-[1.75]" />
-              <span className="sr-only">{link.label}</span>
+              Contato
             </a>
-          );
-        })}
-      </motion.div>
-    </nav>
+
+            <button
+              onClick={() => setIsOpen((v) => !v)}
+              aria-expanded={isOpen}
+              aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+              className="h-10 px-3 flex items-center justify-center text-ink text-xs font-mono uppercase tracking-widest border border-ink/20"
+            >
+              {isOpen ? "Fechar" : "Menu"}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div
+        className="md:hidden"
+        style={{ height: "calc(4rem + env(safe-area-inset-top, 0px))" }}
+        aria-hidden
+      />
+
+      {createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-[9998] md:hidden bg-background flex flex-col"
+              style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+            >
+              <div className="h-16 shrink-0" aria-hidden />
+
+              <nav className="flex-1 relative overflow-hidden flex flex-col justify-center px-6">
+                <ul className="flex flex-col">
+                  {links.map((link, i) => (
+                    <motion.li
+                      key={link.href}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 * i, duration: 0.4, ease: "easeOut" }}
+                      className="border-t border-border/40 last:border-b"
+                    >
+                      <a
+                        href={link.href}
+                        onClick={close}
+                        className="flex items-center py-5 font-display text-4xl font-medium text-ink hover:text-ink-soft transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                <span
+                  aria-hidden
+                  className="pointer-events-none select-none absolute -bottom-6 left-1/2 -translate-x-1/2 font-display font-bold text-[22vw] leading-none text-ink/5 whitespace-nowrap"
+                >
+                  GEORGE
+                </span>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
+    </>
   );
 }
 

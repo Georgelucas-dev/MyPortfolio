@@ -1,54 +1,108 @@
-/* AwwwardsCursor — dot com blend mask */
+/* cursor.css */
 
-/* esconde o cursor nativo quando o custom está ativo */
+/* Esconde o cursor nativo em todo o documento */
 @media (hover: hover) and (pointer: fine) {
   html,
-  html * {
+  html *,
+  a,
+  button {
     cursor: none !important;
   }
 }
 
-.aw-cursor {
+/* Oculta em mobile/touch */
+@media (pointer: coarse) {
+  .aw-cursor-dot,
+  .aw-cursor-ring {
+    display: none !important;
+  }
+}
+
+/* Bolinha central (rápida) */
+.aw-cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  /* Usa a cor atual do seu tema ou branco/preto */
+  background-color: var(--ink, #fff);
   pointer-events: none;
   z-index: 9999;
-  will-change: transform, width, height, opacity;
+  transform: translate(-50%, -50%);
   transition:
-    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.25s ease,
-    opacity 0.25s ease;
-  mix-blend-mode: difference;
+    opacity 0.3s ease,
+    transform 0.2s ease;
+  mix-blend-mode: exclusion; /* Opcional, dá um contraste sutil */
 }
 
-.aw-cursor-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #ffffff;
+/* Anel seguidor (lerp suave) */
+.aw-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.4); /* Ajuste a cor da borda se precisar */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+
+  /* Transições suaves para os estados */
+  transition:
+    width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    border-radius 0.4s ease,
+    opacity 0.3s ease;
 }
 
-/* hover em link/botão: bolinha cresce */
+/* ============================
+   ESTADOS DE INTERAÇÃO
+============================ */
+
+/* HOVER EM LINKS E BOTÕES */
+.aw-cursor-ring.aw-state-link {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+  backdrop-filter: blur(4px); /* Efeito de vidro borrado */
+}
 .aw-cursor-dot.aw-state-link {
-  width: 40px;
+  opacity: 0; /* Esconde a bolinha */
+}
+
+/* HOVER EM TEXTOS MARCADOS */
+/* Faz um morph para uma barrinha vertical elegante */
+.aw-cursor-ring.aw-state-text {
+  width: 4px;
   height: 40px;
+  border-radius: 2px;
+  background-color: var(--ink, #fff);
+  border-color: transparent;
 }
-
-/* hover em texto: bolinha maior com blend mask forte */
 .aw-cursor-dot.aw-state-text {
-  width: 60px;
-  height: 60px;
+  opacity: 0;
 }
 
+/* CLICK PRESSIONADO */
+.aw-cursor-ring.aw-pressed {
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+/* ESCONDIDO (Quando sai da tela) */
 .aw-state-hidden {
   opacity: 0 !important;
 }
 
-/* respeita usuários que preferem menos movimento */
+/* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
-  .aw-cursor {
+  .aw-cursor-ring,
+  .aw-cursor-dot {
     transition: none;
   }
 }

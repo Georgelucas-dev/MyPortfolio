@@ -11,6 +11,8 @@ import WhyWorkWithMe from "./sections/whyWorkWithMe/index";
 import { ServicesSection } from "./sections/ServicesSection";
 import { motion, AnimatePresence } from "motion/react";
 
+import VibePicker from "@/components/VibePicker";
+
 import Loader from "./components/Loader";
 
 import ScatterTextSection from "./sections/ScatterReveal";
@@ -52,7 +54,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Cursor/>
+      <Cursor />
       <div className="relative">
         {/* O Loader é o único elemento que existe de imediato */}
         <Loader onComplete={() => setLoadingComplete(true)} />
@@ -73,6 +75,7 @@ function App() {
               <About />
               <WhyWorkWithMe />
               <Contact />
+              <VibePicker/>
               <Footer />
             </motion.main>
           )}

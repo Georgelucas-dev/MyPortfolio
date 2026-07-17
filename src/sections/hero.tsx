@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useHero } from "@/context/HeroContext";
 
+import mockupImg from "../assets/image/image.png";
+
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
   const { setHeroVisivel } = useHero();
@@ -45,21 +47,15 @@ export default function Hero() {
     <section
       id="home"
       ref={heroRef}
-      // Restaurado o pl-64 e xl:pl-72 para respeitar o seu DesktopNavbar lateral
       className="relative flex flex-col w-full min-h-svh bg-background text-ink px-6 md:px-12 lg:pl-64 lg:pr-16 xl:pl-72 xl:pr-24 pt-8 lg:pt-12 pb-8 overflow-hidden"
     >
-      {/* 
-        ========================================
-        HEADER (Top Nav Interno)
-        ========================================
-      */}
+      {/* HEADER (Top Nav Interno) — segue oculto no mobile, o MobileNavbar cobre esse papel */}
       <motion.nav
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ...transition, delay: 0.1 }}
-        className="flex justify-between items-center w-full mb-12 lg:mb-20"
+        className="hidden md:flex justify-between items-center w-full mb-12 lg:mb-20"
       >
-        {/* Logo / Nome */}
         <div className="w-1/4">
           <a
             href="#home"
@@ -69,7 +65,6 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Links Secundários */}
         <div className="hidden md:flex flex-1 justify-center lg:justify-start lg:pl-8 xl:pl-12 gap-8 lg:gap-12 text-sm text-ink-soft">
           <a href="#servicos" className="hover:text-ink transition-colors">
             Serviços
@@ -79,7 +74,6 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* CTA Contato */}
         <div className="w-auto lg:w-1/4 flex justify-end">
           <a
             href="#contato"
@@ -90,12 +84,8 @@ export default function Hero() {
         </div>
       </motion.nav>
 
-      {/* 
-        ========================================
-        ROW 1: Topo (Filosofia e Localização)
-        ========================================
-      */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 pb-6">
+      {/* ROW 1: Filosofia e Localização — no mobile vira o 3º bloco (depois da linha) */}
+      <div className="order-3 md:order-none grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 pb-6">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -127,45 +117,31 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Linha Divisória */}
+      {/* Linha Divisória — no mobile vira o 2º bloco, entre o texto grande e a filosofia */}
       <motion.div
         initial={{ scaleX: 0, opacity: 0 }}
         animate={{ scaleX: 1, opacity: 1 }}
         transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1], delay: 0.4 }}
-        className="w-full h-[1px] bg-ink/10 origin-left mb-8 lg:mb-10"
+        className="order-2 md:order-none w-full h-[1px] bg-ink/10 origin-left mb-6 md:mb-8 lg:mb-10"
       />
 
-      {/* 
-        ========================================
-        ROW 2: O Texto Gigante e Imagem
-        ========================================
-      */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 flex-1 items-end pb-2">
-        {/* Mockup do MacBook */}
+      {/* ROW 2: Texto Gigante e Imagem — no mobile vira o 1º bloco (fica em cima) */}
+      <div className="order-1 md:order-none grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 flex-none md:flex-1 items-end pb-2 mb-6 md:mb-0">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ ...transition, delay: 0.8 }}
           className="lg:col-span-4 hidden lg:flex flex-col justify-end h-full pb-2"
         >
-          {/* Container da imagem */}
           <div className="w-full max-w-[260px] xl:max-w-[300px] aspect-[4/3] bg-ink/5 flex items-center justify-center relative overflow-hidden group">
-            {/* REMOVA ESSE SPAN QUANDO COLOCAR A IMAGEM */}
-            <span className="text-ink-soft text-xs font-mono group-hover:opacity-0 transition-opacity">
-              [ Seu Mockup ]
-            </span>
-
-            {/* ADICIONE SUA IMAGEM AQUI */}
-            {/* Exemplo com tag img normal: */}
             <img
-              src="src/assets/image/image.png"
+              src={mockupImg}
               alt="Mockup do projeto"
               className="absolute inset-0 w-full h-full object-contain"
             />
           </div>
         </motion.div>
 
-        {/* Tipografia (Ainda Menor) */}
         <div className="lg:col-span-8 flex flex-col items-start w-full">
           <div className="overflow-hidden mb-4 lg:mb-6">
             <motion.p
@@ -178,8 +154,7 @@ export default function Hero() {
             </motion.p>
           </div>
 
-          {/* Texto Reduzido: de 5.5vw para 4.5vw no desktop */}
-          <h1 className="font-display font-medium text-[8.5vw] sm:text-[7vw] lg:text-[4.5vw] xl:text-[4vw] leading-[0.95] tracking-tighter text-ink mb-8 lg:mb-10">
+          <h1 className="font-display font-medium text-[8.5vw] sm:text-[7vw] lg:text-[4.5vw] xl:text-[4vw] leading-[0.95] tracking-tighter text-ink mb-8 lg:mb-10 w-fit">
             <div className="overflow-hidden">
               <motion.span
                 initial={{ y: "100%" }}
