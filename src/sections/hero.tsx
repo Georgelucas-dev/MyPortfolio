@@ -2,10 +2,15 @@
 import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { useHero } from "@/context/HeroContext";
+import NoiseGradient from "@/components/NoiseGradient";
 
 function ArrowDownIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 animate-bounce text-ink-soft">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className="w-5 h-5 animate-bounce text-ink-soft"
+    >
       <path
         d="M12 5V19M12 19L19 12M12 19L5 12"
         stroke="currentColor"
@@ -29,7 +34,7 @@ function Hero() {
       ([entry]) => {
         setHeroVisivel(entry.isIntersecting);
       },
-      { threshold: 0.35 }
+      { threshold: 0.35 },
     );
 
     observer.observe(elemento);
@@ -45,10 +50,24 @@ function Hero() {
       /* Espaçamento esquerdo inteligente para desviar do menu expandido (lg:pl-64 xl:pl-72) */
       className="relative flex flex-col justify-between w-full min-h-svh bg-background text-ink overflow-hidden px-6 md:px-12 lg:pl-64 lg:pr-16 xl:pl-72 xl:pr-24 pt-10 lg:pt-32 pb-12"
     >
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] overflow-hidden"></div>
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <NoiseGradient
+          colors={[
+            [0.02, 0.02, 0.02],
+            [0.04, 0.04, 0.04],
+            [0.07, 0.07, 0.07],
+            [0.1, 0.1, 0.1],
+          ]}
+          speed={0.6}
+          noiseScale={1.4}
+          grainIntensity={0.01}
+        />
+        {/* opcional: máscara para o texto respirar */}
+        <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px]" />
+      </div>
 
       {/* Row 1 */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
@@ -89,7 +108,7 @@ function Hero() {
 
       {/* Row 3 */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mt-12">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
@@ -107,10 +126,10 @@ function Hero() {
               transition={{ ...transition, delay: 0.3 }}
               className="font-display text-3xl xs:text-4xl md:text-5xl lg:text-6xl font-bold leading-none tracking-tight break-words text-ink"
             >
-              Building digital experiences.
+              Construindo experiências digitais.
             </motion.h2>
           </div>
-          
+
           <div className="overflow-hidden">
             <motion.p
               initial={{ y: "100%" }}
@@ -118,8 +137,9 @@ function Hero() {
               transition={{ ...transition, delay: 0.4 }}
               className="text-base md:text-xl text-ink-soft font-light leading-relaxed lg:ml-auto max-w-lg"
             >
-              Construindo arquiteturas robustas e interfaces de alta performance. 
-              Elevando a qualidade de produtos digitais através de código limpo e design impecável.
+              Construindo arquiteturas robustas e interfaces de alta
+              performance. Elevando a qualidade de produtos digitais através de
+              código limpo e design impecável.
             </motion.p>
           </div>
         </div>

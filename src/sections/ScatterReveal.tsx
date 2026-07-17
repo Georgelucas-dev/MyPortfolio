@@ -56,7 +56,7 @@ export default function ScatterTextSection() {
   });
 
   const text =
-    "Established in 2021, SIRNIK is a design and development studio working on digital products and websites. Our approach is built around structure, systems, and clear design decisions.";
+    "Desenvolvo interfaces modernas, rápidas e intuitivas. Transformo ideias em produtos digitais com foco em performance, experiência do usuário e atenção aos detalhes.";
   const words = text.split(" ");
 
   return (

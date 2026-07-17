@@ -60,7 +60,7 @@ export default function Cursor() {
     const isTextLike = (el: Element | null): HTMLElement | null => {
       if (!el) return null;
       const node = (el as HTMLElement).closest(
-        'h1, h2, h3, h4, h5, h6, p, span, blockquote, li, [data-cursor="text"]',
+        'h1, h2, h3, h4, h5, h6, p, span',
       );
       return node as HTMLElement | null;
     };
