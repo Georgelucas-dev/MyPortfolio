@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
+import { Menu, X } from "lucide-react";
 
 const links = [
   { label: "Início", href: "#home" },
@@ -40,9 +41,33 @@ function MobileNavbar() {
               onClick={() => setIsOpen((v) => !v)}
               aria-expanded={isOpen}
               aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
-              className="h-10 px-3 flex items-center justify-center text-ink text-xs font-mono uppercase tracking-widest border border-ink/20"
+              className="relative h-8 w-8 flex items-center justify-center text-ink"
             >
-              {isOpen ? "Fechar" : "Menu"}
+              <AnimatePresence mode="wait" initial={false}>
+                {isOpen ? (
+                  <motion.span
+                    key="close"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <X size={22} strokeWidth={1.75} />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="menu"
+                    initial={{ opacity: 0, rotate: 90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: -90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <Menu size={22} strokeWidth={1.75} />
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </button>
           </div>
         </div>
@@ -74,7 +99,11 @@ function MobileNavbar() {
                       key={link.href}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.05 * i, duration: 0.4, ease: "easeOut" }}
+                      transition={{
+                        delay: 0.05 * i,
+                        duration: 0.4,
+                        ease: "easeOut",
+                      }}
                       className="border-t border-border/40 last:border-b"
                     >
                       <a
