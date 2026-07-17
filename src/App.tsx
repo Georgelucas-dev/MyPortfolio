@@ -1,8 +1,4 @@
-import {
-  CursorProvider,
-  Cursor,
-  CursorFollow,
-} from "@/components/animate-ui/components/animate/cursor";
+import Cursor from "./components/animate-ui/components/Cursor/cursor";
 import { useEffect, useState } from "react";
 import Footer from "./sections/footer";
 import Hero from "./sections/hero";
@@ -12,7 +8,7 @@ import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
 import WhyWorkWithMe from "./sections/whyWorkWithMe/index";
-import { ServicesSection } from "./sections/services/ServicesSection";
+import { ServicesSection } from "./sections/ServicesSection";
 import { motion, AnimatePresence } from "motion/react";
 
 import Loader from "./components/Loader";
@@ -56,40 +52,32 @@ function App() {
 
   return (
     <ThemeProvider>
-      <CursorProvider global>
-        {showCursor ? (
-          <>
-            <Cursor />
-            <CursorFollow>Developer</CursorFollow>
-          </>
-        ) : null}
+      <Cursor/>
+      <div className="relative">
+        {/* O Loader é o único elemento que existe de imediato */}
+        <Loader onComplete={() => setLoadingComplete(true)} />
 
-        <div className="relative">
-          {/* O Loader é o único elemento que existe de imediato */}
-          <Loader onComplete={() => setLoadingComplete(true)} />
-
-          {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
-          <AnimatePresence>
-            {loadingComplete && (
-              <motion.main
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <Navbar />
-                <Hero />
-                <ScatterTextSection />
-                <ServicesSection />
-                <Projects />
-                <About />
-                <WhyWorkWithMe />
-                <Contact />
-                <Footer />
-              </motion.main>
-            )}
-          </AnimatePresence>
-        </div>
-      </CursorProvider>
+        {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
+        <AnimatePresence>
+          {loadingComplete && (
+            <motion.main
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <Navbar />
+              <Hero />
+              <ScatterTextSection />
+              <ServicesSection />
+              <Projects />
+              <About />
+              <WhyWorkWithMe />
+              <Contact />
+              <Footer />
+            </motion.main>
+          )}
+        </AnimatePresence>
+      </div>
     </ThemeProvider>
   );
 }

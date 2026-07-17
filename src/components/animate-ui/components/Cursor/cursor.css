@@ -1,0 +1,64 @@
+/* AwwwardsCursor — mask/blend + morph */
+/* esconde o cursor nativo quando o custom está ativo */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  html * {
+    cursor: none !important;
+  }
+}
+.aw-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform, width, height, border-radius, opacity;
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    opacity 0.25s ease,
+    border-color 0.25s ease;
+  mix-blend-mode: difference;
+}
+/* dot central */
+.aw-cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #ffffff;
+}
+/* ring / pill */
+.aw-cursor-ring {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1.8px solid #ffffff;
+  background: transparent;
+}
+/* estados */
+.aw-cursor-ring.aw-state-link {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+.aw-cursor-dot.aw-state-link {
+  opacity: 0;
+}
+.aw-cursor-ring.aw-state-text {
+  background: #ffffff;
+  border-color: transparent;
+  opacity: 0.9;
+}
+.aw-cursor-dot.aw-state-text {
+  opacity: 0;
+}
+.aw-state-hidden {
+  opacity: 0 !important;
+}
+/* respeita usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .aw-cursor {
+    transition: none;
+  }
+}
