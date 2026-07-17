@@ -9,6 +9,7 @@ export default function VibePicker() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentVibe, setCurrentVibe] = useState("Dark");
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -29,8 +30,10 @@ export default function VibePicker() {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    const config = VIBES[currentVibe];
+  // Aplica as variáveis CSS de fato — chamada direto (não via effect reativo)
+  // pra garantir que a mudança fique síncrona dentro do callback da transição.
+  const applyVibeStyles = (name: string) => {
+    const config = VIBES[name];
     const root = document.documentElement;
 
     root.style.setProperty("--background", config.background);
@@ -41,10 +44,45 @@ export default function VibePicker() {
     root.style.setProperty("--paper", config.surface);
     root.style.setProperty("--selection-background", config.foreground);
     root.style.setProperty("--selection-foreground", config.background);
-  }, [currentVibe]);
+  };
+
+  // Sincroniza a vibe inicial uma única vez, sem transição (só no load da página)
+  useEffect(() => {
+    applyVibeStyles(currentVibe);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleVibeChange = (index: number, item: string) => {
-    setCurrentVibe(item);
+    const commit = () => {
+      applyVibeStyles(item);
+      setCurrentVibe(item);
+    };
+
+    const doc = document as any;
+
+    if (!doc.startViewTransition || !buttonRef.current) {
+      commit();
+      return;
+    }
+
+    // Origem do círculo: centro do botão de vibe, não do gesto na roda
+    const rect = buttonRef.current.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+
+    const root = document.documentElement;
+    root.style.setProperty("--theme-x", `${x}px`);
+    root.style.setProperty("--theme-y", `${y}px`);
+    root.style.setProperty("--theme-r", `${endRadius}px`);
+
+    doc.startViewTransition(() => {
+      commit();
+    });
   };
 
   return (
@@ -53,6 +91,7 @@ export default function VibePicker() {
       className="fixed bottom-6 left-6 z-[9999] flex items-end gap-4"
     >
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="w-12 h-12 rounded-none border border-border bg-paper/80 backdrop-blur-md flex items-center justify-center text-foreground hover:bg-muted transition-colors"
         aria-label="Vibe Check"

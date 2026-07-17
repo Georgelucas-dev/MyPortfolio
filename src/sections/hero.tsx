@@ -112,7 +112,7 @@ export default function Hero() {
             {time && <span className="text-ink">({time})</span>}
           </p>
           <p className="flex items-center gap-2">
-            Desenvolvedor Front-end <span className="text-ink text-xs">🤍</span>
+            Desenvolvedor Front-end
           </p>
         </motion.div>
       </div>
