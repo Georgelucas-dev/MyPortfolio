@@ -2,7 +2,7 @@
 
 // TODO: troque pelos arquivos reais — são só placeholders de caminho.
 import imgDefault from "../assets/image/visual-premiun.webp";
-import imgCode from "../assets/image//Design-moderno (1).png";
+import imgCode from "../assets/image/Design-moderno.webp";
 import imgDesign from "../assets/image/ux-ui.webp";
 import imgPerformance from "../assets/image/performace.webp";
 

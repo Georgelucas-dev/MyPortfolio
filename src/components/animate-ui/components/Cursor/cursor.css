@@ -1,16 +1,12 @@
 /* cursor.css */
 
-/* Esconde o cursor nativo em todo o documento */
 @media (hover: hover) and (pointer: fine) {
   html,
-  html *,
-  a,
-  button {
+  html * {
     cursor: none !important;
   }
 }
 
-/* Oculta em mobile/touch */
 @media (pointer: coarse) {
   .aw-cursor-dot,
   .aw-cursor-ring {
@@ -26,15 +22,14 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  /* Usa a cor atual do seu tema ou branco/preto */
   background-color: var(--ink, #fff);
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
-  mix-blend-mode: exclusion; /* Opcional, dá um contraste sutil */
+  will-change: transform;
+  /* Posição é 100% controlada via JS (rAF) a cada frame.
+     Transicionar "transform" aqui competiria com o lerp do JS. */
+  transition: opacity 0.3s ease;
+  mix-blend-mode: exclusion;
 }
 
 /* Anel seguidor (lerp suave) */
@@ -44,13 +39,12 @@
   left: 0;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.4); /* Ajuste a cor da borda se precisar */
+  border: 1px solid color-mix(in srgb, var(--ink, #fff) 40%, transparent);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
-  transform: translate(-50%, -50%);
+  will-change: transform;
 
-  /* Transições suaves para os estados */
   transition:
     width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -64,20 +58,17 @@
    ESTADOS DE INTERAÇÃO
 ============================ */
 
-/* HOVER EM LINKS E BOTÕES */
 .aw-cursor-ring.aw-state-link {
   width: 64px;
   height: 64px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: color-mix(in srgb, var(--ink, #fff) 10%, transparent);
   border-color: transparent;
-  backdrop-filter: blur(4px); /* Efeito de vidro borrado */
+  backdrop-filter: blur(4px);
 }
 .aw-cursor-dot.aw-state-link {
-  opacity: 0; /* Esconde a bolinha */
+  opacity: 0;
 }
 
-/* HOVER EM TEXTOS MARCADOS */
-/* Faz um morph para uma barrinha vertical elegante */
 .aw-cursor-ring.aw-state-text {
   width: 4px;
   height: 40px;
@@ -89,17 +80,16 @@
   opacity: 0;
 }
 
-/* CLICK PRESSIONADO */
+/* CLICK PRESSIONADO — a escala real é aplicada via JS (junto do transform
+   de posição, pra não ser sobrescrita); aqui é só um feedback extra sutil */
 .aw-cursor-ring.aw-pressed {
-  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0.85;
 }
 
-/* ESCONDIDO (Quando sai da tela) */
 .aw-state-hidden {
   opacity: 0 !important;
 }
 
-/* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
   .aw-cursor-ring,
   .aw-cursor-dot {

@@ -1,9 +1,8 @@
 // src/data/pillars-data.ts
 
 // 1. Importando as imagens explicitamente para o Vite processá-las
-import imgDesignModerno from "../assets/image/Design-moderno (1).png";
-import imgConversion from "../assets/image/conversion.jpg";
-import imgWhatsapp from "../assets/image/whatsapp.webp";
+import imgDesignModerno from "../assets/image/Design-moderno.webp";
+import imgConversion from "../assets/image/conversion.webp";
 import imgUxUi from "../assets/image/ux-ui.webp";
 import imgResponsivo from "../assets/image/responsivel.webp";
 import imgPerformance from "../assets/image/performace.webp";
@@ -48,20 +47,6 @@ export const pillars: Pillar[] = [
       { label: "ROI", value: "Focado" },
     ],
     image: imgConversion,
-  },
-  {
-    id: "whatsapp",
-    index: "03",
-    title: "WHATSAPP INTEGRADO",
-    subtitle: "Atendimento direto e rápido",
-    overview:
-      "Nada de formulários complexos. Integro botões de WhatsApp de forma inteligente, garantindo que o cliente fale com você em um único clique.",
-    metrics: [
-      { label: "Agilidade", value: "Instantânea" },
-      { label: "Contato", value: "Direto" },
-      { label: "Conversão", value: "Direta" },
-    ],
-    image: imgWhatsapp,
   },
   {
     id: "ux-ui",

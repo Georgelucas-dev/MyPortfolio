@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useHero } from "@/context/HeroContext";
 
-import mockupImg from "../assets/image/image.png";
+import mockupImg from "../assets/image/image.webp";
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
