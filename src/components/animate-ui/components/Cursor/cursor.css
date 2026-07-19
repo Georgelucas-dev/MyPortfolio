@@ -24,7 +24,7 @@
   border-radius: 50%;
   background-color: var(--ink, #fff);
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   will-change: transform;
   /* Posição é 100% controlada via JS (rAF) a cada frame.
      Transicionar "transform" aqui competiria com o lerp do JS. */
@@ -42,7 +42,7 @@
   border: 1px solid color-mix(in srgb, var(--ink, #fff) 40%, transparent);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9998;
+  z-index: 9999;
   will-change: transform;
 
   transition:

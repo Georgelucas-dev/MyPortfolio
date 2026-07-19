@@ -7,6 +7,7 @@ import t1ServicesDesktop from "../assets/projects/psychologist-tamplate1/psychol
 import t1ServicesMobile from "../assets/projects/psychologist-tamplate1/psychologist-template-services-mobile.png";
 import t1AboutDesktop from "../assets/projects/psychologist-tamplate1/psychologist-template-about-desktop.png";
 import t1AboutMobile from "../assets/projects/psychologist-tamplate1/psychologist-template-about-mobile.png";
+import t1BgImg from "../assets/projects/psychologist-tamplate1/bg-image.webp"
 
 // Template 2
 import t2HeroDesktop from "../assets/projects/psychologist-tamplate2/psychologist-template-hero-desktop.webp";
@@ -15,13 +16,7 @@ import t2ServicesDesktop from "../assets/projects/psychologist-tamplate2/psychol
 import t2ServicesMobile from "../assets/projects/psychologist-tamplate2/psychologist-template-services-mobile.webp";
 import t2HowItWorksDesktop from "../assets/projects/psychologist-tamplate2/psychologist-template-howitworks-desktop.webp";
 import t2HowItWorksMobile from "../assets/projects/psychologist-tamplate2/psychologist-template-howitworks-mobile.webp";
-
-export interface ProjectSection {
-  desktopImage: string;
-  mobileImage: string;
-  backgroundImage?: string;
-  backgroundImageMobile?: string;
-}
+import t2BgImg from "../assets/projects/psychologist-tamplate2/bg-image.webp"
 
 export interface Project {
   title: string;
@@ -29,8 +24,10 @@ export interface Project {
   description: string;
   year: string;
   tags: string[];
-  sections: ProjectSection[];
   href: string;
+  backgroundImage: string; // imagem padrão do "stage"
+  relatedImages: string[]; // imagens que aparecem no hover (máx. 3)
+  sections: ProjectSection[]; // mantido, caso use em outra página de case study
 }
 
 export const projectsData: Project[] = [
@@ -42,19 +39,12 @@ export const projectsData: Project[] = [
     year: "2026",
     tags: ["React", "Tailwind", "Motion"],
     href: "#",
+    backgroundImage: t1BgImg,
+    relatedImages: [t1ServicesDesktop, t1AboutDesktop, t1HeroMobile],
     sections: [
-      {
-        desktopImage: t1HeroDesktop,
-        mobileImage: t1HeroMobile,
-      },
-      {
-        desktopImage: t1ServicesMobile,
-        mobileImage: t1ServicesDesktop,
-      },
-      {
-        desktopImage: t1AboutMobile,
-        mobileImage: t1AboutDesktop,
-      },
+      { desktopImage: t1HeroDesktop, mobileImage: t1HeroMobile },
+      { desktopImage: t1ServicesMobile, mobileImage: t1ServicesDesktop },
+      { desktopImage: t1AboutMobile, mobileImage: t1AboutDesktop },
     ],
   },
   {
@@ -65,19 +55,12 @@ export const projectsData: Project[] = [
     year: "2026",
     tags: ["React", "Tailwind", "Motion"],
     href: "#",
+    backgroundImage: t2BgImg,
+    relatedImages: [t2ServicesDesktop, t2HowItWorksDesktop, t2HeroMobile],
     sections: [
-      {
-        desktopImage: t2HeroDesktop,
-        mobileImage: t2HeroMobile,
-      },
-      {
-        desktopImage: t2ServicesMobile,
-        mobileImage: t2ServicesDesktop,
-      },
-      {
-        desktopImage: t2HowItWorksDesktop,
-        mobileImage: t2HowItWorksMobile,
-      },
+      { desktopImage: t2HeroDesktop, mobileImage: t2HeroMobile },
+      { desktopImage: t2ServicesMobile, mobileImage: t2ServicesDesktop },
+      { desktopImage: t2HowItWorksDesktop, mobileImage: t2HowItWorksMobile },
     ],
   },
 ];

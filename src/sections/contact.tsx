@@ -14,9 +14,13 @@ export default function Contact() {
   const linksRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !circleRef.current) return;
 
     const ctx = gsap.context(() => {
+      // Usamos o GSAP para centralizar a bola em vez do Tailwind.
+      // Isso evita conflitos bizarros entre as variáveis do Tailwind e o transform do GSAP.
+      gsap.set(circleRef.current, { xPercent: -50, yPercent: -50 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -25,14 +29,23 @@ export default function Contact() {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
+          // Isso é essencial: se o usuário redimensionar ou girar o celular,
+          // o GSAP recalcula a matemática da escala.
+          invalidateOnRefresh: true,
         },
       });
 
-      tl.to(
+      tl.fromTo(
         circleRef.current,
         {
-          // Aumentamos a escala drásticamente porque a bolinha inicial agora é bem pequena
-          scale: 35,
+          // MATEMÁTICA MÁGICA:
+          // Pega o tamanho visual que queremos (10vw) e divide pelo tamanho real da bola (300vmax).
+          scale: () =>
+            (window.innerWidth * 0.1) /
+            (Math.max(window.innerWidth, window.innerHeight) * 3),
+        },
+        {
+          scale: 1, // Volta pro tamanho original perfeito e sem pixelar
           ease: "power2.inOut",
         },
         0,
@@ -71,12 +84,13 @@ export default function Contact() {
         className="relative w-full h-[100svh] overflow-hidden flex items-center justify-center"
       >
         {/* 
-          A BOLINHA INICIAL
-          Reduzida de 60vw para 10vw (e a margem negativa para metade do tamanho: 5vw)
+          A BOLA GIGANTE
+          Ao invés de 10vw, ela tem absurdos 300vmax (3 vezes a maior dimensão da tela).
+          Isso garante que, quando ela expandir, preencha até as pontas de um monitor Ultrawide.
         */}
         <div
           ref={circleRef}
-          className="absolute top-full left-1/2 w-[10vw] h-[10vw] -mt-[5vw] -ml-[5vw] rounded-full bg-foreground will-change-transform"
+          className="absolute top-full left-1/2 w-[300vmax] h-[300vmax] rounded-full bg-foreground will-change-transform"
         />
 
         <div className="relative z-10 w-full h-full flex flex-col justify-between px-6 md:px-12 lg:px-24 pt-24 pb-12 text-background">

@@ -1,5 +1,5 @@
 import Cursor from "./components/animate-ui/components/Cursor/cursor";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Footer from "./sections/footer";
 import Hero from "./sections/hero";
 import About from "./sections/about";
@@ -9,16 +9,15 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
 import WhyWorkWithMe from "./sections/whyWorkWithMe/index";
 import { ServicesSection } from "./sections/ServicesSection";
-import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap"; // Importação do GSAP adicionada
 
 import VibePicker from "@/components/VibePicker";
-
 import Loader from "./components/Loader";
-
 import ScatterTextSection from "./sections/ScatterReveal";
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
+  const mainRef = useRef<HTMLElement>(null); // Referência para animar o main
 
   // Opcional: Trava o scroll da página enquanto o loader está ativo
   useEffect(() => {
@@ -52,9 +51,22 @@ function App() {
     return () => mediaQuery.removeEventListener("change", updateShowCursor);
   }, []);
 
+  // Animação do GSAP quando o main é montado
+  useEffect(() => {
+    if (loadingComplete && mainRef.current) {
+      gsap.fromTo(
+        mainRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8, ease: "power2.out" },
+      );
+    }
+  }, [loadingComplete]);
+
   return (
     <ThemeProvider>
-      <Cursor />
+      {/* Adicionei a validação do showCursor que você havia criado, mas não estava usando na tag */}
+      {showCursor && <Cursor />}
+
       <div className="relative">
         {/* O Loader é o único elemento que existe de imediato */}
         {!loadingComplete && (
@@ -62,26 +74,20 @@ function App() {
         )}
 
         {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
-        <AnimatePresence>
-          {loadingComplete && (
-            <motion.main
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <Navbar />
-              <Hero />
-              <ScatterTextSection />
-              <ServicesSection />
-              <Projects />
-              <About />
-              <WhyWorkWithMe />
-              <Contact />
-              <VibePicker />
-              <Footer />
-            </motion.main>
-          )}
-        </AnimatePresence>
+        {loadingComplete && (
+          <main ref={mainRef} style={{ opacity: 0 }}>
+            <Navbar />
+            <Hero />
+            <ScatterTextSection />
+            <ServicesSection />
+            <Projects />
+            <About />
+            <WhyWorkWithMe />
+            <Contact />
+            <VibePicker />
+            <Footer />
+          </main>
+        )}
       </div>
     </ThemeProvider>
   );

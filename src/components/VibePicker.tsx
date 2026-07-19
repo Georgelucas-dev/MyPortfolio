@@ -1,6 +1,6 @@
 // src/components/VibePicker.tsx
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
 import OptionWheel from "./OptionWheel";
 import { VIBES, VIBE_NAMES } from "@/config/vibes";
 import { Headphones } from "lucide-react";
@@ -8,9 +8,33 @@ import { Headphones } from "lucide-react";
 export default function VibePicker() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentVibe, setCurrentVibe] = useState("Dark");
+
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // GSAP: Animação de entrada e saída
+  useLayoutEffect(() => {
+    if (!panelRef.current) return;
+
+    if (isOpen) {
+      gsap.to(panelRef.current, {
+        autoAlpha: 1, // Torna visível e opacidade 1
+        y: 0,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.2)", // Simula o spring effect do Framer Motion
+      });
+    } else {
+      gsap.to(panelRef.current, {
+        autoAlpha: 0, // Opacidade 0 e visibility: hidden ao final
+        y: 20,
+        scale: 0.95,
+        duration: 0.3,
+        ease: "power2.in",
+      });
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -31,10 +55,7 @@ export default function VibePicker() {
     };
   }, [isOpen]);
 
-  // Bloqueio real do scroll global: listener NATIVO, em fase de captura,
-  // registrado direto no painel — não no React (onWheel do JSX não chega
-  // a impedir o listener do Lenis, que fica no window, porque o
-  // stopPropagation do React só vale dentro do sistema sintético dele).
+  // Bloqueio real do scroll global: listener NATIVO
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel || !isOpen) return;
@@ -115,45 +136,44 @@ export default function VibePicker() {
         <Headphones size={20} />
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            ref={panelRef}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            data-lenis-prevent
-            className="w-64 h-80 bg-paper/90 backdrop-blur-xl border border-border rounded-none shadow-2xl relative"
-          >
-            <div className="absolute top-6 left-0 w-full text-center text-xs font-sans uppercase tracking-widest text-ink-soft z-10 pointer-events-none">
-              Soundtrack / Vibe
-            </div>
+      {/* O elemento permanece renderizado, mas escondido visualmente e interativamente pelo GSAP (autoAlpha) */}
+      <div
+        ref={panelRef}
+        // Estado inicial embutido via style para prevenir flash of unstyled content antes do GSAP agir
+        style={{
+          opacity: 0,
+          visibility: "hidden",
+          transform: "translateY(20px) scale(0.95)",
+        }}
+        data-lenis-prevent
+        className="w-64 h-80 bg-paper/90 backdrop-blur-xl border border-border rounded-none shadow-2xl relative"
+      >
+        <div className="absolute top-6 left-0 w-full text-center text-xs font-sans uppercase tracking-widest text-ink-soft z-10 pointer-events-none">
+          Soundtrack / Vibe
+        </div>
 
-            <div className="w-full h-full pt-8">
-              <OptionWheel
-                items={VIBE_NAMES}
-                defaultSelected={VIBE_NAMES.indexOf(currentVibe)}
-                textColor="var(--ink-soft)"
-                activeColor="var(--ink)"
-                side="left"
-                fontSize={2}
-                spacing={1.8}
-                curve={1}
-                tilt={10}
-                blur={2}
-                fade={0.3}
-                inset={30}
-                loop={true}
-                draggable={true}
-                soundUrl="/assets/sounds/click-soft.mp3"
-                soundVolume={0.3}
-                onChange={handleVibeChange}
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <div className="w-full h-full pt-8">
+          <OptionWheel
+            items={VIBE_NAMES}
+            defaultSelected={VIBE_NAMES.indexOf(currentVibe)}
+            textColor="var(--ink-soft)"
+            activeColor="var(--ink)"
+            side="left"
+            fontSize={2}
+            spacing={1.8}
+            curve={1}
+            tilt={10}
+            blur={2}
+            fade={0.3}
+            inset={30}
+            loop={true}
+            draggable={true}
+            soundUrl="/assets/sounds/click-soft.mp3"
+            soundVolume={0.3}
+            onChange={handleVibeChange}
+          />
+        </div>
+      </div>
     </div>
   );
 }
