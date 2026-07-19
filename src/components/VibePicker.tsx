@@ -12,7 +12,6 @@ export default function VibePicker() {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const wheelLockRef = useRef(false);
 
   // GSAP: Animação de entrada e saída
   useLayoutEffect(() => {
@@ -25,6 +24,13 @@ export default function VibePicker() {
         scale: 1,
         duration: 0.5,
         ease: "back.out(1.2)",
+        onComplete: () => {
+          // foca o wheel assim que o painel termina de abrir, pra que as
+          // setas do teclado funcionem sem precisar clicar antes
+          panelRef.current
+            ?.querySelector<HTMLElement>('[role="listbox"]')
+            ?.focus();
+        },
       });
     } else {
       gsap.to(panelRef.current, {
@@ -53,6 +59,26 @@ export default function VibePicker() {
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Bloqueio do scroll da página quando o mouse está sobre o painel.
+  // SEM stopPropagation aqui — isso bloquearia o listener interno do
+  // OptionWheel, que já faz preventDefault() e move a seleção sozinho.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || !isOpen) return;
+
+    const preventScroll = (e: WheelEvent | TouchEvent) => {
+      e.preventDefault();
+    };
+
+    panel.addEventListener("wheel", preventScroll, { passive: false });
+    panel.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      panel.removeEventListener("wheel", preventScroll);
+      panel.removeEventListener("touchmove", preventScroll);
     };
   }, [isOpen]);
 
@@ -106,65 +132,6 @@ export default function VibePicker() {
       commit();
     });
   };
-
-  // avança/volta um item na lista de vibes, com wraparound (igual ao loop do OptionWheel)
-  const navigateVibe = (direction: 1 | -1) => {
-    const total = VIBE_NAMES.length;
-    const currentIndex = VIBE_NAMES.indexOf(currentVibe);
-    const nextIndex = (currentIndex + direction + total) % total;
-    handleVibeChange(nextIndex, VIBE_NAMES[nextIndex]);
-  };
-
-  // Scroll do mouse sobre o painel: troca a vibe E trava o scroll do fundo de verdade
-  useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || !isOpen) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault(); // só funciona pq o listener é passive:false
-      e.stopPropagation();
-
-      if (wheelLockRef.current) return;
-
-      navigateVibe(e.deltaY > 0 ? 1 : -1);
-
-      // pequeno "cooldown" pra cada scroll mover só um item por vez (efeito de picker)
-      wheelLockRef.current = true;
-      window.setTimeout(() => {
-        wheelLockRef.current = false;
-      }, 180);
-    };
-
-    const stopTouch = (e: TouchEvent) => e.stopPropagation();
-
-    panel.addEventListener("wheel", handleWheel, { passive: false });
-    panel.addEventListener("touchmove", stopTouch, { passive: true });
-
-    return () => {
-      panel.removeEventListener("wheel", handleWheel);
-      panel.removeEventListener("touchmove", stopTouch);
-    };
-  }, [isOpen, currentVibe]);
-
-  // Fallback / reforço: setas do teclado enquanto o painel estiver aberto
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-        e.preventDefault();
-        navigateVibe(1);
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        navigateVibe(-1);
-      } else if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, currentVibe]);
 
   return (
     <div

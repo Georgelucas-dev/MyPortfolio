@@ -65,14 +65,13 @@ export default function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative flex lg:pb-4 flex-col w-full min-h-svh bg-background text-ink overflow-hidden"
+      className="relative flex flex-col w-full h-svh bg-background text-ink overflow-hidden"
     >
-      {/* 1. HEADER (Top Nav) - Inspirado na referência, com os links centralizados */}
+      {/* 1. HEADER (Top Nav) */}
       <nav
         ref={navRef}
-        className="lg:flex hidden justify-between items-center w-full px-6 md:px-12 pt-8"
+        className="lg:flex hidden justify-between items-center w-full px-6 md:px-12 pt-8 shrink-0"
       >
-        {/* Logo Direita */}
         <div className="w-1/3">
           <a
             href="#home"
@@ -82,7 +81,6 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Links Centralizados (Oculto no mobile, onde entra o menu hambúrguer) */}
         <div className="hidden md:flex w-1/3 justify-center gap-8 text-sm font-medium text-ink/70">
           <a href="#servicos" className="hover:text-ink transition-colors">
             Serviços
@@ -92,7 +90,6 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Botão de Contato Esquerda */}
         <div className="w-1/3 flex justify-end">
           <a
             href="#contato"
@@ -103,10 +100,9 @@ export default function Hero() {
         </div>
       </nav>
 
-      {/* 2. CONTEÚDO CENTRAL - Pequeno, delicado e direto ao ponto */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 text-center z-10 -mt-12 md:-mt-20">
+      {/* 2. CONTEÚDO CENTRAL */}
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center px-6 text-center z-10 -mt-12 md:-mt-20">
         <div ref={iconRef} className="mb-6 text-ink/40">
-          {/* Ícone de globo minimalista, idêntico à vibe da referência */}
           <svg
             width="36"
             height="36"
@@ -134,12 +130,10 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* 3. TIPOGRAFIA GIGANTE NO RODAPÉ */}
-      <div className="w-full flex justify-center items-end overflow-hidden pb-0">
+      {/* 3. TIPOGRAFIA GIGANTE NO RODAPÉ — agora sempre grudada no fim do viewport */}
+      <div className="flex-1 min-h-0 w-full flex justify-center items-end overflow-hidden">
         <h1
           ref={titleRef}
-          // text-[18vw] faz o texto escalar perfeitamente com a largura da tela
-          // leading-[0.75] remove o espaçamento extra em baixo da fonte para colar no fundo
           className="font-display font-bold text-[18vw] leading-[0.75] tracking-tighter text-ink uppercase whitespace-nowrap select-none"
         >
           FRONT-END

@@ -9,7 +9,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
 import WhyWorkWithMe from "./sections/whyWorkWithMe/index";
 import { ServicesSection } from "./sections/ServicesSection";
-import gsap from "gsap"; // Importação do GSAP adicionada
+import gsap from "gsap";
 
 import VibePicker from "@/components/VibePicker";
 import Loader from "./components/Loader";

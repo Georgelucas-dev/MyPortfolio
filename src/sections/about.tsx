@@ -25,7 +25,6 @@ export function About() {
           trigger: containerRef.current,
           start: "top 75%",
           end: "bottom bottom",
-          // Garante que o GSAP recalcule as alturas se a janela mudar
           invalidateOnRefresh: true,
         },
       });
@@ -47,12 +46,10 @@ export function About() {
         "<",
       );
 
-      // Pegamos os elementos de texto por classe
       const textElements = gsap.utils.toArray(".gsap-reveal-text");
 
       tl.fromTo(
         textElements,
-        // Reduzimos o pulo de 50 para 30 para evitar qualquer shift drástico de layout
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -65,8 +62,6 @@ export function About() {
       );
     }, containerRef);
 
-    // Força o ScrollTrigger a recalcular as posições reais da página após a montagem
-    // Isso é a principal vacina contra os "pulos" de seção
     ScrollTrigger.refresh();
 
     return () => ctx.revert();
@@ -76,7 +71,6 @@ export function About() {
     <section
       ref={containerRef}
       id="about"
-      // Troquei min-h-screen por min-h-[100svh] para compatibilidade melhor com mobile
       className="relative min-h-[100svh] w-full bg-background text-ink flex items-center overflow-hidden py-24 md:py-32"
     >
       <div className="w-full pl-6 md:pl-16 lg:pl-24 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">
@@ -89,11 +83,8 @@ export function About() {
             {aboutData.eyebrow}
           </p>
 
-          {/* 
-            TEXTO PRINCIPAL 
-            Tamanho reduzido de text-3xl/5xl/[3.5rem] para text-2xl/4xl/5xl
-          */}
-          <h2 className="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.2] tracking-tight max-w-4xl">
+          {/* Texto principal — reduzido de 2xl/4xl/5xl para xl/3xl/4xl */}
+          <h2 className="font-display text-xl md:text-3xl lg:text-4xl leading-[1.25] tracking-tight max-w-4xl">
             {aboutData.segments.map((segment, i) =>
               segment.type === "highlight" ? (
                 <span
@@ -113,11 +104,8 @@ export function About() {
           </h2>
 
           <div className="gsap-reveal-text mt-10 md:mt-12 pl-0 md:pl-[20%] flex flex-col gap-4">
-            {/* 
-              TEXTO DE APOIO 
-              Tamanho reduzido de base/lg para sm/base 
-            */}
-            <p className="text-sm md:text-base text-ink-soft max-w-sm leading-relaxed font-sans">
+            {/* Texto de apoio — reduzido de sm/base para xs/sm */}
+            <p className="text-xs md:text-sm text-ink-soft max-w-sm leading-relaxed font-sans">
               Meu nome é Seu Nome. Um criador apaixonado por resolver problemas
               complexos através de interfaces intuitivas, sempre buscando a
               simbiose perfeita entre arte visual e tecnologia da informação.
@@ -129,7 +117,8 @@ export function About() {
         </div>
 
         {/* COLUNA DIREITA - IMAGENS */}
-        <div className="w-full md:w-5/12 h-[50vh] md:h-[75vh] flex justify-end">
+        {/* Altura aumentada: 50vh/75vh -> 55vh/82vh */}
+        <div className="w-full md:w-5/12 h-[55vh] md:h-[82vh] flex justify-end">
           <div
             ref={imageWrapperRef}
             className="relative w-full h-full rounded-l-3xl md:rounded-l-[5rem] overflow-hidden bg-card will-change-transform"
@@ -141,8 +130,11 @@ export function About() {
               <img
                 src={aboutData.defaultImage}
                 alt="Retrato"
-                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out"
-                style={{ opacity: activeId ? 0 : 1 }}
+                className="absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out will-change-[opacity,filter]"
+                style={{
+                  opacity: activeId ? 0 : 1,
+                  filter: activeId ? "blur(14px)" : "blur(0px)",
+                }}
               />
 
               {aboutData.images.map((img) => (
@@ -150,8 +142,11 @@ export function About() {
                   key={img.id}
                   src={img.image}
                   alt={`Representação de ${img.id}`}
-                  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out"
-                  style={{ opacity: activeId === img.id ? 1 : 0 }}
+                  className="absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out will-change-[opacity,filter]"
+                  style={{
+                    opacity: activeId === img.id ? 1 : 0,
+                    filter: activeId === img.id ? "blur(0px)" : "blur(14px)",
+                  }}
                 />
               ))}
 
