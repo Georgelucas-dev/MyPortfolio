@@ -8,9 +8,9 @@ interface Props {
   total: number;
 }
 
-const CYCLE_MS = 1400; // intervalo de troca entre as imagens relacionadas
-const BASE_SCALE = 1.18; // "sobra" de imagem pra cobrir o movimento do parallax sem estourar borda
-const HOVER_SCALE = 1.28; // zoom extra só no hover
+const CYCLE_MS = 1400;
+const BASE_SCALE = 1.18;
+const HOVER_SCALE = 1.28;
 
 function ProjectHoverRow({ project, index, total }: Props) {
   const rowRef = useRef<HTMLDivElement>(null);
@@ -18,6 +18,9 @@ function ProjectHoverRow({ project, index, total }: Props) {
   const overlayRefs = useRef<(HTMLImageElement | null)[]>([]);
   const activeIndexRef = useRef(0);
   const intervalRef = useRef<number | null>(null);
+  // fonte da verdade sobre o estado real do hover, checada dentro do próprio
+  // callback do intervalo — protege contra qualquer tick "atrasado"
+  const isHoveringRef = useRef(false);
 
   const { contextSafe } = useGSAP(
     () => {
@@ -28,14 +31,11 @@ function ProjectHoverRow({ project, index, total }: Props) {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      // estado base: imagem já maior que o container, sem blur/escurecimento
       gsap.set(bg, {
         scale: BASE_SCALE,
         filter: "blur(0px) brightness(1)",
       });
 
-      // parallax de scroll: se move DENTRO da margem que o BASE_SCALE criou,
-      // por isso nunca alcança a borda real da imagem
       if (!reduceMotion) {
         gsap.fromTo(
           bg,
@@ -56,15 +56,19 @@ function ProjectHoverRow({ project, index, total }: Props) {
     { scope: rowRef },
   );
 
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) window.clearInterval(intervalRef.current);
-    };
-  }, []);
+  const clearCycle = () => {
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  useEffect(() => clearCycle, []);
 
   const showAt = contextSafe((i: number) => {
     const el = overlayRefs.current[i];
     if (!el) return;
+    gsap.killTweensOf(el);
     gsap.fromTo(
       el,
       { autoAlpha: 0, scale: 1.04 },
@@ -75,6 +79,7 @@ function ProjectHoverRow({ project, index, total }: Props) {
   const hideAt = contextSafe((i: number) => {
     const el = overlayRefs.current[i];
     if (!el) return;
+    gsap.killTweensOf(el);
     gsap.to(el, {
       autoAlpha: 0,
       scale: 0.98,
@@ -83,11 +88,28 @@ function ProjectHoverRow({ project, index, total }: Props) {
     });
   });
 
+  // esconde TODAS as imagens de uma vez, sem depender de qual índice
+  // "deveria" estar ativo — garantia contra qualquer imagem órfã
+  const hideAllOverlays = contextSafe(() => {
+    overlayRefs.current.forEach((el) => {
+      if (!el) return;
+      gsap.killTweensOf(el);
+      gsap.set(el, { autoAlpha: 0 });
+    });
+  });
+
   const handleEnter = contextSafe(() => {
+    // se por algum motivo já existia um ciclo rodando (double-fire de
+    // mouseenter, remount rápido etc.), mata antes de começar outro
+    clearCycle();
+
+    isHoveringRef.current = true;
+
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    gsap.killTweensOf(bgRef.current);
     gsap.to(bgRef.current, {
       scale: HOVER_SCALE,
       filter: "blur(6px) brightness(0.72)",
@@ -100,6 +122,10 @@ function ProjectHoverRow({ project, index, total }: Props) {
 
     if (project.relatedImages.length > 1 && !reduceMotion) {
       intervalRef.current = window.setInterval(() => {
+        // se o mouse já saiu mas esse tick foi enfileirado antes do
+        // clearInterval rodar, aborta em vez de reacender uma imagem
+        if (!isHoveringRef.current) return;
+
         const prev = activeIndexRef.current;
         const next = (prev + 1) % project.relatedImages.length;
         hideAt(prev);
@@ -110,12 +136,10 @@ function ProjectHoverRow({ project, index, total }: Props) {
   });
 
   const handleLeave = contextSafe(() => {
-    if (intervalRef.current) {
-      window.clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+    isHoveringRef.current = false;
+    clearCycle();
 
-    // volta pro BASE_SCALE, nunca pra 1 — senão a margem do parallax some
+    gsap.killTweensOf(bgRef.current);
     gsap.to(bgRef.current, {
       scale: BASE_SCALE,
       filter: "blur(0px) brightness(1)",
@@ -123,7 +147,8 @@ function ProjectHoverRow({ project, index, total }: Props) {
       ease: "power3.out",
     });
 
-    hideAt(activeIndexRef.current);
+    // esconde tudo, não só o índice que achamos que está ativo
+    hideAllOverlays();
   });
 
   return (
