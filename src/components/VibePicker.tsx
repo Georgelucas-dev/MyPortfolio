@@ -12,6 +12,7 @@ export default function VibePicker() {
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const wheelLockRef = useRef(false);
 
   // GSAP: Animação de entrada e saída
   useLayoutEffect(() => {
@@ -19,15 +20,15 @@ export default function VibePicker() {
 
     if (isOpen) {
       gsap.to(panelRef.current, {
-        autoAlpha: 1, // Torna visível e opacidade 1
+        autoAlpha: 1,
         y: 0,
         scale: 1,
         duration: 0.5,
-        ease: "back.out(1.2)", // Simula o spring effect do Framer Motion
+        ease: "back.out(1.2)",
       });
     } else {
       gsap.to(panelRef.current, {
-        autoAlpha: 0, // Opacidade 0 e visibility: hidden ao final
+        autoAlpha: 0,
         y: 20,
         scale: 0.95,
         duration: 0.3,
@@ -52,22 +53,6 @@ export default function VibePicker() {
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
-  // Bloqueio real do scroll global: listener NATIVO
-  useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || !isOpen) return;
-
-    const stop = (e: Event) => e.stopPropagation();
-
-    panel.addEventListener("wheel", stop, { capture: true, passive: true });
-    panel.addEventListener("touchmove", stop, { capture: true, passive: true });
-
-    return () => {
-      panel.removeEventListener("wheel", stop, { capture: true } as any);
-      panel.removeEventListener("touchmove", stop, { capture: true } as any);
     };
   }, [isOpen]);
 
@@ -122,6 +107,65 @@ export default function VibePicker() {
     });
   };
 
+  // avança/volta um item na lista de vibes, com wraparound (igual ao loop do OptionWheel)
+  const navigateVibe = (direction: 1 | -1) => {
+    const total = VIBE_NAMES.length;
+    const currentIndex = VIBE_NAMES.indexOf(currentVibe);
+    const nextIndex = (currentIndex + direction + total) % total;
+    handleVibeChange(nextIndex, VIBE_NAMES[nextIndex]);
+  };
+
+  // Scroll do mouse sobre o painel: troca a vibe E trava o scroll do fundo de verdade
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || !isOpen) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault(); // só funciona pq o listener é passive:false
+      e.stopPropagation();
+
+      if (wheelLockRef.current) return;
+
+      navigateVibe(e.deltaY > 0 ? 1 : -1);
+
+      // pequeno "cooldown" pra cada scroll mover só um item por vez (efeito de picker)
+      wheelLockRef.current = true;
+      window.setTimeout(() => {
+        wheelLockRef.current = false;
+      }, 180);
+    };
+
+    const stopTouch = (e: TouchEvent) => e.stopPropagation();
+
+    panel.addEventListener("wheel", handleWheel, { passive: false });
+    panel.addEventListener("touchmove", stopTouch, { passive: true });
+
+    return () => {
+      panel.removeEventListener("wheel", handleWheel);
+      panel.removeEventListener("touchmove", stopTouch);
+    };
+  }, [isOpen, currentVibe]);
+
+  // Fallback / reforço: setas do teclado enquanto o painel estiver aberto
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        navigateVibe(1);
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        navigateVibe(-1);
+      } else if (e.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, currentVibe]);
+
   return (
     <div
       ref={containerRef}
@@ -136,10 +180,8 @@ export default function VibePicker() {
         <Headphones size={20} />
       </button>
 
-      {/* O elemento permanece renderizado, mas escondido visualmente e interativamente pelo GSAP (autoAlpha) */}
       <div
         ref={panelRef}
-        // Estado inicial embutido via style para prevenir flash of unstyled content antes do GSAP agir
         style={{
           opacity: 0,
           visibility: "hidden",
