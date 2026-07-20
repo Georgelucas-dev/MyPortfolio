@@ -1,4 +1,4 @@
-import Cursor from "./components/animate-ui/components/Cursor/cursor";
+import Cursor from "./components/Cursor/cursor";
 import { useEffect, useState, useRef } from "react";
 import Footer from "./sections/footer";
 import Hero from "./sections/hero";

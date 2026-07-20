@@ -1,222 +1,235 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { cn } from "../../lib/utils";
-import type { Project, ProjectSection } from "../../data/Projects";
+import { useEffect, useId, useRef } from "react";
+import { gsap, ScrollTrigger, useGSAP } from "../../lib/gsap";
+import type { Project } from "../../data/Projects";
+import { useActiveRowController } from "./ActiveRowContext";
 
 interface Props {
   project: Project;
-  projectIndex: number;
+  index: number;
+  total: number;
 }
 
-function ArrowUpRightIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" aria-hidden>
-      <path
-        d="M7 17L17 7M17 7H7M17 7V17"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const CYCLE_MS = 1400;
+const BASE_SCALE = 1.18;
+const ACTIVE_SCALE = 1.28;
 
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" aria-hidden>
-      <path
-        d="M6 6l12 12M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+function MobileProjectCard({ project, index, total }: Props) {
+  const id = useId();
+  const controller = useActiveRowController();
 
-interface LightboxProps {
-  src: string | null;
-  onClose: () => void;
-}
+  const rowRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLImageElement>(null);
+  const overlayRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const activeIndexRef = useRef(0);
+  const intervalRef = useRef<number | null>(null);
+  const isActiveRef = useRef(false);
 
-function Lightbox({ src, onClose }: LightboxProps) {
-  useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+  const clearCycle = () => {
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose]);
+  };
+
+  const { contextSafe } = useGSAP(
+    () => {
+      const bg = bgRef.current;
+      if (!bg) return;
+
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      gsap.set(bg, { scale: BASE_SCALE, filter: "blur(0px) brightness(1)" });
+
+      // parallax de scroll — independente de estar ativo ou não
+      if (!reduceMotion) {
+        gsap.fromTo(
+          bg,
+          { yPercent: -5 },
+          {
+            yPercent: 5,
+            ease: "none",
+            scrollTrigger: {
+              trigger: rowRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+            },
+          },
+        );
+      }
+    },
+    { scope: rowRef },
+  );
+
+  const showAt = contextSafe((i: number) => {
+    const el = overlayRefs.current[i];
+    if (!el) return;
+    gsap.killTweensOf(el);
+    gsap.fromTo(
+      el,
+      { autoAlpha: 0, scale: 1.04 },
+      { autoAlpha: 1, scale: 1, duration: 0.55, ease: "power3.out" },
+    );
+  });
+
+  const hideAt = contextSafe((i: number) => {
+    const el = overlayRefs.current[i];
+    if (!el) return;
+    gsap.killTweensOf(el);
+    gsap.to(el, { autoAlpha: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" });
+  });
+
+  const hideAllOverlays = contextSafe(() => {
+    overlayRefs.current.forEach((el) => {
+      if (!el) return;
+      gsap.killTweensOf(el);
+      gsap.set(el, { autoAlpha: 0 });
+    });
+  });
+
+  const activate = contextSafe(() => {
+    if (isActiveRef.current) return;
+    isActiveRef.current = true;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    gsap.killTweensOf(bgRef.current);
+    gsap.to(bgRef.current, {
+      scale: ACTIVE_SCALE,
+      filter: "blur(6px) brightness(0.72)",
+      duration: 0.6,
+      ease: "power3.out",
+    });
+
+    activeIndexRef.current = 0;
+    showAt(0);
+
+    if (project.relatedImages.length > 1 && !reduceMotion) {
+      intervalRef.current = window.setInterval(() => {
+        if (!isActiveRef.current) return;
+        const prev = activeIndexRef.current;
+        const next = (prev + 1) % project.relatedImages.length;
+        hideAt(prev);
+        showAt(next);
+        activeIndexRef.current = next;
+      }, CYCLE_MS);
+    }
+  });
+
+  const deactivate = contextSafe(() => {
+    if (!isActiveRef.current) return;
+    isActiveRef.current = false;
+    clearCycle();
+
+    gsap.killTweensOf(bgRef.current);
+    gsap.to(bgRef.current, {
+      scale: BASE_SCALE,
+      filter: "blur(0px) brightness(1)",
+      duration: 0.6,
+      ease: "power3.out",
+    });
+
+    hideAllOverlays();
+  });
+
+  // decide quando ESTE card está "em foco" na tela — a zona ativa é o
+  // trecho central do viewport; ajuste os 65%/35% se quiser mais ou
+  // menos sensibilidade
+  useGSAP(
+    () => {
+      const st = ScrollTrigger.create({
+        trigger: rowRef.current,
+        start: "top 65%",
+        end: "bottom 35%",
+        onEnter: () => controller.activate(id, deactivate),
+        onEnterBack: () => controller.activate(id, deactivate),
+        onLeave: () => {
+          controller.release(id);
+          deactivate();
+        },
+        onLeaveBack: () => {
+          controller.release(id);
+          deactivate();
+        },
+      });
+
+      return () => st.kill();
+    },
+    { scope: rowRef },
+  );
 
   useEffect(() => {
-    if (src) document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      clearCycle();
+      controller.release(id);
     };
-  }, [src]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <AnimatePresence>
-      {src && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          onClick={onClose}
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-6"
-        >
-          <motion.img
+    <div
+      ref={rowRef}
+      className="border-b border-border py-8 first:pt-0 last:border-b-0"
+    >
+      {/* Stage de imagem */}
+      <div className="relative h-72 overflow-hidden bg-ink/5">
+        <img
+          ref={bgRef}
+          src={project.backgroundImage}
+          alt={project.title}
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
+        />
+
+        {project.relatedImages.map((src, i) => (
+          <img
+            key={src}
+            ref={(el) => {
+              overlayRefs.current[i] = el;
+            }}
             src={src}
             alt=""
-            initial={{ scale: 0.94, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.96, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.21, 0.47, 0.32, 0.98] }}
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+            loading="lazy"
+            className="absolute inset-0 z-10 m-auto h-[85%] w-[85%] object-contain opacity-0 drop-shadow-2xl will-change-transform"
           />
+        ))}
+      </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fechar"
-            className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-background/10 text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background"
-          >
-            <CloseIcon />
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
+      {/* Conteúdo */}
+      <div className="mt-6">
+        <p className="font-mono text-xs uppercase tracking-[.3em] text-ink-soft">
+          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+        </p>
 
-interface CompositionProps {
-  section: ProjectSection;
-  index: number;
-  onOpen: (src: string) => void;
-}
+        <h3 className="font-display mt-3 text-2xl font-bold text-ink">
+          {project.title}
+        </h3>
 
-function Composition({ section, index, onOpen }: CompositionProps) {
-  const flip = index % 2 !== 0;
+        <p className="mt-4 leading-7 text-ink-soft">{project.description}</p>
 
-  return (
-    <div className="relative px-3 md:px-4">
-      {/* Índice fantasma */}
-      <span
-        aria-hidden
-        className={cn(
-          "absolute top-0 z-0 select-none font-display text-[5.5rem] sm:text-[6.5rem] leading-none text-ink/10",
-          flip ? "right-4" : "left-4",
-        )}
-      >
-        {String(index + 1).padStart(2, "0")}
-      </span>
+        <div className="mt-6 flex flex-wrap gap-3">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-border px-3 py-1 text-sm text-ink-soft"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
 
-      {/* Desktop: espia atrás */}
-      <motion.button
-        type="button"
-        onClick={() => onOpen(section.desktopImage)}
-        initial={{ opacity: 0, y: 20, scale: 0.95, rotate: flip ? -5 : 5 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1, rotate: flip ? -3 : 3 }}
-        viewport={{ once: true, margin: "-15%" }}
-        transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
-        className={cn(
-          "absolute top-10 z-[1] w-[58%] cursor-zoom-in appearance-none bg-transparent p-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border",
-          flip ? "left-2" : "right-2",
-        )}
-      >
-        <img
-          src={section.desktopImage}
-          alt=""
-          className="w-full rounded-lg shadow-lg ring-1 ring-ink/5"
-        />
-      </motion.button>
-
-      {/* Mobile: na frente */}
-      <div
-        className={cn("relative z-10 w-[64%]", flip ? "ml-auto" : "mr-auto")}
-      >
-        <motion.button
-          type="button"
-          onClick={() => onOpen(section.mobileImage)}
-          initial={{ opacity: 0, y: 32, scale: 0.95, rotate: flip ? 5 : -5 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1, rotate: flip ? 3 : -3 }}
-          viewport={{ once: true, margin: "-15%" }}
-          transition={{
-            duration: 0.7,
-            delay: 0.15,
-            ease: [0.21, 0.47, 0.32, 0.98],
-          }}
-          className="block w-full cursor-zoom-in appearance-none bg-transparent p-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border"
+        <a
+          href={project.href}
+          className="mt-8 inline-flex w-fit items-center gap-2 text-ink transition-colors hover:text-clay"
         >
-          <img
-            src={section.mobileImage}
-            alt=""
-            className="w-full rounded-2xl shadow-2xl ring-1 ring-ink/5"
-          />
-        </motion.button>
+          Ver projeto →
+        </a>
       </div>
     </div>
   );
 }
 
-function ProjectCard({ project, projectIndex }: Props) {
-  const [openImage, setOpenImage] = useState<string | null>(null);
-
-  return (
-    <article className="mb-20 last:mb-0 w-full overflow-x-clip">
-      {/* meta do projeto */}
-      <div className="flex items-baseline justify-between border-t border-border pt-4 px-2">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">
-          {String(projectIndex + 1).padStart(2, "0")} · {project.subtitle}
-        </p>
-        <p className="font-mono text-[11px] text-ink-soft">{project.year}</p>
-      </div>
-
-      {/* composições */}
-      <div className="mt-12 flex flex-col gap-16">
-        {project.sections.map((section, i) => (
-          <Composition
-            key={i}
-            section={section}
-            index={i}
-            onOpen={setOpenImage}
-          />
-        ))}
-      </div>
-
-      {/* título, descrição, tags */}
-      <div className="mt-12 px-2">
-        <h2 className="font-display text-4xl leading-[1.05] text-ink">
-          {project.title}
-        </h2>
-
-        <p className="mt-4 text-ink-soft leading-relaxed max-w-xl">
-          {project.description}
-        </p>
-
-        <p className="mt-6 font-mono text-xs uppercase tracking-widest text-ink-soft">
-          {project.tags.join(" · ")}
-        </p>
-
-        <a
-          href={project.href}
-          className="group mt-8 inline-flex items-center gap-3 border-b border-border hover:border-ink transition-colors pb-1.5 font-mono text-sm uppercase tracking-widest text-ink"
-        >
-          Ver projeto
-          <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
-            <ArrowUpRightIcon />
-          </span>
-        </a>
-      </div>
-
-      <Lightbox src={openImage} onClose={() => setOpenImage(null)} />
-    </article>
-  );
-}
-
-export default ProjectCard;
+export default MobileProjectCard;

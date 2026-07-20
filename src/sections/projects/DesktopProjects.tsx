@@ -1,4 +1,4 @@
-import ProjectHoverRow from "@/components/Projects/ProjectHoverRow";
+import ProjectHoverRow from "./ProjectHoverRow";
 import { projectsData } from "../../data/Projects";
 
 function DesktopProjects() {

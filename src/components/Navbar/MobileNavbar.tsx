@@ -73,11 +73,7 @@ function MobileNavbar() {
         </div>
       </header>
 
-      <div
-        className="md:hidden"
-        style={{ height: "calc(4rem + env(safe-area-inset-top, 0px))" }}
-        aria-hidden
-      />
+      {/* O SPACER QUE ESTAVA AQUI FOI REMOVIDO PARA NÃO EMPURRAR O HERO */}
 
       {createPortal(
         <AnimatePresence>
@@ -90,6 +86,7 @@ function MobileNavbar() {
               className="fixed inset-0 z-[9998] md:hidden bg-background flex flex-col"
               style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
             >
+              {/* Este spacer interno continua aqui para o menu aberto ficar correto */}
               <div className="h-16 shrink-0" aria-hidden />
 
               <nav className="flex-1 relative overflow-hidden flex flex-col justify-center px-6">
