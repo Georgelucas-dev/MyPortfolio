@@ -5,6 +5,8 @@ import OptionWheel from "./OptionWheel";
 import { VIBES, VIBE_NAMES } from "@/config/vibes";
 import { Headphones } from "lucide-react";
 
+import clickSound from "../assets/sounds/click-soft.wav";
+
 export default function VibePicker() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentVibe, setCurrentVibe] = useState("Dark");
@@ -177,7 +179,7 @@ export default function VibePicker() {
             inset={30}
             loop={true}
             draggable={true}
-            soundUrl="/assets/sounds/click-soft.mp3"
+            soundUrl={clickSound}
             soundVolume={0.3}
             onChange={handleVibeChange}
           />

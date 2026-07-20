@@ -78,7 +78,12 @@ function MobileProjectCard({ project, index, total }: Props) {
     const el = overlayRefs.current[i];
     if (!el) return;
     gsap.killTweensOf(el);
-    gsap.to(el, { autoAlpha: 0, scale: 0.98, duration: 0.4, ease: "power2.inOut" });
+    gsap.to(el, {
+      autoAlpha: 0,
+      scale: 0.98,
+      duration: 0.4,
+      ease: "power2.inOut",
+    });
   });
 
   const hideAllOverlays = contextSafe(() => {
@@ -145,8 +150,14 @@ function MobileProjectCard({ project, index, total }: Props) {
         trigger: rowRef.current,
         start: "top 65%",
         end: "bottom 35%",
-        onEnter: () => controller.activate(id, deactivate),
-        onEnterBack: () => controller.activate(id, deactivate),
+        onEnter: () => {
+          controller.activate(id, deactivate);
+          activate(); // <--- FALTAVA ISSO AQUI
+        },
+        onEnterBack: () => {
+          controller.activate(id, deactivate);
+          activate(); // <--- FALTAVA ISSO AQUI TAMBÉM
+        },
         onLeave: () => {
           controller.release(id);
           deactivate();
@@ -157,6 +168,8 @@ function MobileProjectCard({ project, index, total }: Props) {
         },
       });
 
+      // Opcional: O useGSAP já limpa os ScrollTriggers criados dentro dele automaticamente,
+      // mas retornar a limpeza manualmente não faz mal.
       return () => st.kill();
     },
     { scope: rowRef },
@@ -201,7 +214,8 @@ function MobileProjectCard({ project, index, total }: Props) {
       {/* Conteúdo */}
       <div className="mt-6">
         <p className="font-mono text-xs uppercase tracking-[.3em] text-ink-soft">
-          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          {String(index + 1).padStart(2, "0")} /{" "}
+          {String(total).padStart(2, "0")}
         </p>
 
         <h3 className="font-display mt-3 text-2xl font-bold text-ink">

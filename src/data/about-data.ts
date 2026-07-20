@@ -1,7 +1,7 @@
 // src/data/about-data.ts
 
 // TODO: troque pelos arquivos reais — são só placeholders de caminho.
-import imgDefault from "../assets/image/visual-premiun.webp";
+import imgDefault from "../assets/image/Me.jpeg";
 import imgCode from "../assets/image/Design-moderno.webp";
 import imgDesign from "../assets/image/ux-ui.webp";
 import imgPerformance from "../assets/image/performace.webp";
