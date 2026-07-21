@@ -14,20 +14,21 @@ const WINDOW_HEIGHT = 180;
 
 export default function RevealLayer({
   imageSrc,
-  containerRef,
   isHovering,
   targetPos,
   currentPos,
 }: RevealLayerProps) {
   const revealRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);
-  const windowRectRef = useRef<SVGRectElement>(null);
+  const maskGroupRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
     const reveal = revealRef.current;
     const border = borderRef.current;
-    const rect = windowRectRef.current;
-    if (!reveal || !border || !rect) return;
+    const maskGroup = maskGroupRef.current;
+    if (!reveal || !border || !maskGroup) return;
+
+    gsap.set([maskGroup, border], { transformOrigin: "center center" });
 
     const lerpFactor = 0.12;
 
@@ -37,31 +38,30 @@ export default function RevealLayer({
       currentPos.current.x += dx * lerpFactor;
       currentPos.current.y += dy * lerpFactor;
 
-      const left = currentPos.current.x - WINDOW_WIDTH / 2;
-      const top = currentPos.current.y - WINDOW_HEIGHT / 2;
-
-      rect.setAttribute("x", String(left));
-      rect.setAttribute("y", String(top));
-      border.style.transform = `translate(${left}px, ${top}px)`;
+      gsap.set([maskGroup, border], {
+        x: currentPos.current.x,
+        y: currentPos.current.y,
+      });
     };
 
     gsap.ticker.add(update);
 
-    // Controle de visibilidade baseado no hover
     if (isHovering) {
-      gsap.to([reveal, border], {
-        opacity: 1,
+      gsap.to(reveal, { opacity: 1, duration: 0.4, ease: "power2.out" });
+      gsap.to([maskGroup, border], {
         scale: 1,
         duration: 0.4,
         ease: "power2.out",
       });
+      gsap.to(border, { opacity: 1, duration: 0.4, ease: "power2.out" });
     } else {
-      gsap.to([reveal, border], {
-        opacity: 0,
+      gsap.to(reveal, { opacity: 0, duration: 0.3, ease: "power2.in" });
+      gsap.to([maskGroup, border], {
         scale: 0.8,
         duration: 0.3,
         ease: "power2.in",
       });
+      gsap.to(border, { opacity: 0, duration: 0.3, ease: "power2.in" });
     }
 
     return () => {
@@ -75,26 +75,26 @@ export default function RevealLayer({
         <defs>
           <mask id="reveal-mask">
             <rect width="100%" height="100%" fill="black" />
-            <rect
-              ref={windowRectRef}
-              x={-WINDOW_WIDTH / 2}
-              y={-WINDOW_HEIGHT / 2}
-              width={WINDOW_WIDTH}
-              height={WINDOW_HEIGHT}
-              fill="white"
-            />
+            <g ref={maskGroupRef}>
+              <rect
+                x={-WINDOW_WIDTH / 2}
+                y={-WINDOW_HEIGHT / 2}
+                width={WINDOW_WIDTH}
+                height={WINDOW_HEIGHT}
+                fill="white"
+              />
+            </g>
           </mask>
         </defs>
       </svg>
 
       <div
         ref={revealRef}
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           mask: "url(#reveal-mask)",
           WebkitMask: "url(#reveal-mask)",
           opacity: 0,
-          transform: "scale(0.8)",
         }}
       >
         <img
@@ -105,18 +105,20 @@ export default function RevealLayer({
         />
       </div>
 
+      {/* BORDA DE VIDRO AQUI */}
       <div
         ref={borderRef}
-        className="absolute border border-foreground/30 shadow-2xl will-change-transform pointer-events-none"
+        className="absolute border-[3px] border-white/40 mix-blend-overlay will-change-transform pointer-events-none"
         style={{
           width: WINDOW_WIDTH,
           height: WINDOW_HEIGHT,
           top: 0,
           left: 0,
+          marginTop: -WINDOW_HEIGHT / 2,
+          marginLeft: -WINDOW_WIDTH / 2,
           opacity: 0,
           transform: "scale(0.8)",
-          boxShadow:
-            "inset 0 0 20px rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.5)",
+          // Removidas as propriedades de boxShadow e shadow do tailwind!
         }}
       />
     </>

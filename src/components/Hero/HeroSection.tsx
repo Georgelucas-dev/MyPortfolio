@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useHero } from "@/context/HeroContext";
 import { gsap } from "gsap";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import HeroContentMinimal from "./HeroContentMinimal";
 import FilmGrain from "./FilmGrain";
 import ImageRevealContainer from "./ImageRevealContainer";
@@ -12,6 +13,7 @@ export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { heroVisivel } = useHero();
+  const isMobile = useMediaQuery("(max-width: 1023px)"); // tablets e abaixo
 
   useEffect(() => {
     if (!heroVisivel) return;
@@ -34,16 +36,15 @@ export default function HeroSection() {
     >
       <FilmGrain />
 
-      {/* Container absoluto que cobre toda a área, com margem superior para a navbar */}
       <div className="absolute inset-0 pt-20 px-4 md:px-12">
         <div ref={contentRef} className="flex flex-col h-full gap-4">
-          {/* Nome: flex-shrink-0 para não comprimir */}
-
-          {/* Imagem: ocupa o espaço restante */}
           <div className="flex-1 min-h-0">
-            <ImageRevealContainer imageSrc={HERO_IMAGE} />
+            <ImageRevealContainer
+              imageSrc={HERO_IMAGE}
+              enableReveal={!isMobile}
+            />
           </div>
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <HeroContentMinimal />
           </div>
         </div>
