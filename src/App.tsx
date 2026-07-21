@@ -76,13 +76,15 @@ function App() {
         {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
         {loadingComplete && (
           <main ref={mainRef} style={{ opacity: 0 }}>
-            <Navbar />
-            <Hero />
-            <ScatterTextSection />
+            {/* <Navbar /> */}
+            <div className="relative w-full">
+              <Hero />
+              <ScatterTextSection />
+            </div>
             <ServicesSection />
             <Projects />
-            <About />
-            <WhyWorkWithMe/>
+            {/* <About /> */}
+            <WhyWorkWithMe />
             <Contact />
             <VibePicker />
             <Footer />
