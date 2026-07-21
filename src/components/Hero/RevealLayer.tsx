@@ -1,77 +1,77 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, RefObject } from "react";
 import gsap from "gsap";
 
 interface RevealLayerProps {
   imageSrc: string;
+  containerRef: RefObject<HTMLDivElement>;
+  isHovering: boolean;
+  targetPos: RefObject<{ x: number; y: number }>;
+  currentPos: RefObject<{ x: number; y: number }>;
 }
 
 const WINDOW_WIDTH = 300;
 const WINDOW_HEIGHT = 180;
 
-export default function RevealLayer({ imageSrc }: RevealLayerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const windowRectRef = useRef<SVGRectElement>(null);
+export default function RevealLayer({
+  imageSrc,
+  containerRef,
+  isHovering,
+  targetPos,
+  currentPos,
+}: RevealLayerProps) {
+  const revealRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);
-
-  // Posições alvo (mouse) e interpoladas
-  const target = useRef({ x: -200, y: -200 });
-  const current = useRef({ x: -200, y: -200 });
+  const windowRectRef = useRef<SVGRectElement>(null);
 
   useEffect(() => {
-    const rect = windowRectRef.current;
+    const reveal = revealRef.current;
     const border = borderRef.current;
-    if (!rect || !border) return;
+    const rect = windowRectRef.current;
+    if (!reveal || !border || !rect) return;
 
-    // Atualiza alvo com o mouse
-    const onMouseMove = (e: MouseEvent) => {
-      target.current.x = e.clientX;
-      target.current.y = e.clientY;
-    };
-
-    // Lerp suave e aplicação simultânea
-    const lerpFactor = 0.12; // ajuste para mais/menos inércia
+    const lerpFactor = 0.12;
 
     const update = () => {
-      const dx = target.current.x - current.current.x;
-      const dy = target.current.y - current.current.y;
+      const dx = targetPos.current.x - currentPos.current.x;
+      const dy = targetPos.current.y - currentPos.current.y;
+      currentPos.current.x += dx * lerpFactor;
+      currentPos.current.y += dy * lerpFactor;
 
-      current.current.x += dx * lerpFactor;
-      current.current.y += dy * lerpFactor;
+      const left = currentPos.current.x - WINDOW_WIDTH / 2;
+      const top = currentPos.current.y - WINDOW_HEIGHT / 2;
 
-      const left = current.current.x - WINDOW_WIDTH / 2;
-      const top = current.current.y - WINDOW_HEIGHT / 2;
-
-      // Atualiza a máscara SVG
       rect.setAttribute("x", String(left));
       rect.setAttribute("y", String(top));
-
-      // Atualiza a borda visual (mesmo deslocamento)
       border.style.transform = `translate(${left}px, ${top}px)`;
     };
 
     gsap.ticker.add(update);
-    window.addEventListener("mousemove", onMouseMove);
 
-    // Animação de surgimento da borda
-    gsap.fromTo(
-      border,
-      { opacity: 0, scale: 0.8 },
-      { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.2)", delay: 1 },
-    );
+    // Controle de visibilidade baseado no hover
+    if (isHovering) {
+      gsap.to([reveal, border], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    } else {
+      gsap.to([reveal, border], {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.3,
+        ease: "power2.in",
+      });
+    }
 
     return () => {
       gsap.ticker.remove(update);
-      window.removeEventListener("mousemove", onMouseMove);
     };
-  }, []);
+  }, [isHovering, targetPos, currentPos]);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 z-10 pointer-events-none"
-    >
-      {/* Máscara SVG (invisível) que controla a revelação */}
-      <svg className="absolute inset-0 w-full h-full">
+    <>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           <mask id="reveal-mask">
             <rect width="100%" height="100%" fill="black" />
@@ -87,10 +87,15 @@ export default function RevealLayer({ imageSrc }: RevealLayerProps) {
         </defs>
       </svg>
 
-      {/* Camada colorida com a máscara aplicada */}
       <div
+        ref={revealRef}
         className="absolute inset-0"
-        style={{ mask: "url(#reveal-mask)", WebkitMask: "url(#reveal-mask)" }}
+        style={{
+          mask: "url(#reveal-mask)",
+          WebkitMask: "url(#reveal-mask)",
+          opacity: 0,
+          transform: "scale(0.8)",
+        }}
       >
         <img
           src={imageSrc}
@@ -100,10 +105,9 @@ export default function RevealLayer({ imageSrc }: RevealLayerProps) {
         />
       </div>
 
-      {/* Borda visual – mesma posição da máscara, sincronizada via JS */}
       <div
         ref={borderRef}
-        className="absolute border border-foreground/30 shadow-2xl will-change-transform"
+        className="absolute border border-foreground/30 shadow-2xl will-change-transform pointer-events-none"
         style={{
           width: WINDOW_WIDTH,
           height: WINDOW_HEIGHT,
@@ -115,6 +119,6 @@ export default function RevealLayer({ imageSrc }: RevealLayerProps) {
             "inset 0 0 20px rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.5)",
         }}
       />
-    </div>
+    </>
   );
 }
