@@ -1,11 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHero } from "@/context/HeroContext";
 import { gsap } from "gsap";
 import HeroContent from "./HeroContent";
 import FilmGrain from "./FilmGrain";
 import ImageGray from "./ImageGray";
 import RevealLayer from "./RevealLayer";
-
 import HeroImg from "./heroImg.jpg"
 
 const HERO_IMAGE = HeroImg;
@@ -16,6 +15,17 @@ export default function HeroSection() {
   const centerTextRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { heroVisivel } = useHero();
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mql.matches);
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     if (!heroVisivel) return;
@@ -37,7 +47,7 @@ export default function HeroSection() {
       tl.fromTo(
         ".hero-detail",
         { opacity: 0, y: -10 },
-        { opacity: 1, y: 0, duration: 0.8 },
+        { opacity: 1, y: 0, duration: 0.8 }
       )
         .to(nameRef.current, {
           opacity: 1,
@@ -49,37 +59,52 @@ export default function HeroSection() {
         .to(
           centerTextRef.current,
           { opacity: 1, y: 0, duration: 0.7 },
-          "-=0.65",
+          "-=0.65"
         )
-        .to(".hero-subtitle", { opacity: 1, y: 0, duration: 0.5 }, "-=0.4")
+        .to(
+          ".hero-subtitle",
+          { opacity: 1, y: 0, duration: 0.5 },
+          "-=0.4"
+        )
         .to(
           ".hero-footer-detail",
           { opacity: 1, x: 0, duration: 0.5 },
-          "-=0.3",
+          "-=0.3"
         );
+
+      // Só anima o cursor editorial se não for mobile
+      if (!isMobile) {
+        tl.fromTo(
+          ".editorial-cursor",
+          { opacity: 0, scale: 0.8 },
+          { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.2)" },
+          "+=0.2"
+        );
+      }
 
       return () => tl.kill();
     }, contentRef);
 
     return () => ctx.revert();
-  }, [heroVisivel]);
+  }, [heroVisivel, isMobile]);
 
   return (
     <section
       ref={heroRef}
       id="home"
       data-theme="dark"
-      className="relative sticky top-0 w-full h-screen overflow-hidden bg-background cursor-none select-none z-0"
+      className={`relative sticky top-0 w-full h-screen overflow-hidden bg-background select-none z-0 ${
+        isMobile ? "" : "cursor-none"
+      }`}
     >
-      <ImageGray src={HERO_IMAGE} />
-      <RevealLayer imageSrc={HERO_IMAGE} />
-      <HeroContent
-        ref={contentRef}
-        nameRef={nameRef}
-        centerTextRef={centerTextRef}
-      />
+      {/* Imagem base: PB no desktop, colorida no mobile (opcional) */}
+      <ImageGray src={HERO_IMAGE} grayscale={!isMobile} />
+
+      {/* Camada de revelação apenas no desktop */}
+      {!isMobile && <RevealLayer imageSrc={HERO_IMAGE} />}
+
+      <HeroContent />
       <FilmGrain />
-      <div className="pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_150px_rgba(0,0,0,0.6)]" />
     </section>
   );
 }
