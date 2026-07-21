@@ -5,47 +5,54 @@ export interface ServiceCard {
   text1: string;
   text2: string;
   actionText: string;
+  bgClass: string;
+  textClass: string;
 }
 
 export const servicesCards: ServiceCard[] = [
   {
     id: "01",
-    title: "Sites Institucionais &\nLanding Pages",
-    label: "Para Profissionais",
+    title: "Brand Strategy &\nPosicionamento",
+    label: "Estratégia",
     text1:
-      "Crio sites modernos, rápidos e profissionais para psicólogos, advogados, nutricionistas, coaches e outros profissionais liberais.",
+      "Construção de marca forte e posicionamento estratégico no mercado digital.",
     text2:
-      "Design atraente, otimizado para celular, formulário de contato e integração com WhatsApp. Tudo pensado para transmitir credibilidade e gerar mais clientes.",
-    actionText: "Quero um site",
+      "Identificamos o valor único do seu negócio para criar uma conexão real e duradoura com seu público.",
+    actionText: "Saber mais",
+    bgClass: "bg-[#D8C5FF]", // Lilás Pastel
+    textClass: "text-[#121212]",
   },
   {
     id: "02",
-    title: "Desenvolvimento Web\nCustomizado",
-    label: "Full Stack",
-    text1:
-      "Desenvolvo sistemas e aplicações web completas usando React, TypeScript, Node.js e Tailwind.",
+    title: "Identidade Visual\n& Design System",
+    label: "Visual Identity",
+    text1: "Linguagem visual única que gera impacto imediato e autoridade.",
     text2:
-      "Seja um dashboard, plataforma de agendamento, e-commerce simples ou automação, entrego código limpo, performático e fácil de manter.",
-    actionText: "Falar sobre meu projeto",
+      "Criação de logotipos, tipografia, paleta de cores e diretrizes visuais prontas para escala.",
+    actionText: "Ver portfólio",
+    bgClass: "bg-[#FFFFFF]", // Branco Puro
+    textClass: "text-[#121212]",
   },
   {
     id: "03",
-    title: "Sites para Pequenos\nNegócios",
-    label: "Comércio & Serviços",
-    text1:
-      "Crio sites para clínicas, lojas, restaurantes, academias e prestadores de serviço que querem aparecer bem na internet.",
+    title: "Desenvolvimento Web\n& Landing Pages",
+    label: "Full Stack",
+    text1: "Sites ultra-rápidos, otimizados para conversão e 100% sob medida.",
     text2:
-      "Foco em conversão: agendamento online, WhatsApp, SEO básico e design que passa confiança para o cliente final.",
-    actionText: "Quero meu site",
+      "Desenvolvidos com React, Next.js e Tailwind para garantir performance e máxima nota no Google.",
+    actionText: "Iniciar projeto",
+    bgClass: "bg-[#FBE870]", // Amarelo Vibrante
+    textClass: "text-[#121212]",
   },
   {
     id: "04",
-    title: "Manutenção &\nEvolução de Sites",
-    label: "Suporte Contínuo",
-    text1:
-      "Faço atualizações, correções, melhorias de performance e adição de novas funcionalidades em sites já existentes.",
+    title: "Sistemas Customizados\n& Automações",
+    label: "Software",
+    text1: "Dashboards, plataformas de agendamento e automação de processos.",
     text2:
-      "Também posso modernizar visualmente sites antigos, tornando-os mais rápidos e atrativos.",
-    actionText: "Preciso de manutenção",
+      "Código limpo, seguro e preparado para crescer junto com a demanda da sua empresa.",
+    actionText: "Solicitar orçamento",
+    bgClass: "bg-[#1C4D46]", // Verde Teal Escuro
+    textClass: "text-[#F5F5F5]",
   },
 ];
