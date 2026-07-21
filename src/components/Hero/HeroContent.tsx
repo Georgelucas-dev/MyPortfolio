@@ -26,11 +26,12 @@ export default function HeroContent() {
   return (
     <div
       ref={contentRef}
-      className="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-10 pointer-events-none"
+      // h-[100dvh] garante a altura exata da tela no mobile, ignorando o nav
+      className="absolute top-0 left-0 w-full h-dvh z-20 flex flex-col justify-end p-6 md:p-10 pointer-events-none"
     >
       <div className="flex flex-col items-start">
-        <h1 className="text-[18vw] md:text-[13vw] font-display font-black uppercase leading-[0.82] tracking-[-0.04em] text-sage text-left overflow-hidden">
-          <span className="hero-title-line block">George</span>
+        <h1 className="text-[22vw] md:text-[13vw] font-display font-black uppercase leading-[0.82] tracking-[-0.04em] text-background text-left overflow-hidden">
+          <span className="hero-title-line block pb-2 md:pb-4">George</span>
         </h1>
       </div>
     </div>

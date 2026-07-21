@@ -68,8 +68,7 @@ export default function EditorialCursor({ image }: EditorialCursorProps) {
       ref={cursorRef}
       className="
         editorial-cursor fixed z-10 
-        w-[280px] h-[180px] 
-        border border-white/30 
+        w-280px h-180px
         pointer-events-none
         overflow-hidden
       "

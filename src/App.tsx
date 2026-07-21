@@ -10,6 +10,7 @@ import HeroSection from "./components/Hero/HeroSection";
 import ScatterTextSection from "./sections/ScatterReveal";
 import Loader from "./components/Loader";
 import gsap from "gsap";
+import { About } from "./sections/about";
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
@@ -52,6 +53,7 @@ function App() {
             </div>
             <ServicesSection />
             <Projects />
+            <About />
             <WhyWorkWithMe />
             <Contact />
             <Footer />
