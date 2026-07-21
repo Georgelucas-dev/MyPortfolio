@@ -1,57 +1,31 @@
-import Cursor from "./components/Cursor/cursor";
 import { useEffect, useState, useRef } from "react";
 import Footer from "./sections/footer";
-import Hero from "./sections/hero";
-import About from "./sections/about";
 import Projects from "./sections/projects/projects";
 import Contact from "./sections/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar/navbar";
 import WhyWorkWithMe from "./sections/WhyWorkWithMe";
-import { ServicesSection } from "./sections/ServicesSection";
-import gsap from "gsap";
-
-import VibePicker from "@/components/VibePicker";
-import Loader from "./components/Loader";
+import { ServicesSection } from "./sections/services/ServicesSection";
+import HeroSection from "./components/Hero/HeroSection";
 import ScatterTextSection from "./sections/ScatterReveal";
+import Loader from "./components/Loader";
+import gsap from "gsap";
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
-  const mainRef = useRef<HTMLElement>(null); // Referência para animar o main
+  const mainRef = useRef<HTMLElement>(null);
 
-  // Opcional: Trava o scroll da página enquanto o loader está ativo
+  // Trava o scroll enquanto o loader estiver ativo
   useEffect(() => {
     if (!loadingComplete) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
-      window.scrollTo(0, 0); // Garante que a página comece no topo
+      window.scrollTo(0, 0);
     }
   }, [loadingComplete]);
 
-  const [showCursor, setShowCursor] = useState(() => {
-    if (typeof window === "undefined") {
-      return true;
-    }
-
-    return !window.matchMedia("(max-width: 768px)").matches;
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    const updateShowCursor = () => setShowCursor(!mediaQuery.matches);
-
-    updateShowCursor();
-    mediaQuery.addEventListener("change", updateShowCursor);
-
-    return () => mediaQuery.removeEventListener("change", updateShowCursor);
-  }, []);
-
-  // Animação do GSAP quando o main é montado
+  // Animação de fade-in no main após o loader
   useEffect(() => {
     if (loadingComplete && mainRef.current) {
       gsap.fromTo(
@@ -64,29 +38,22 @@ function App() {
 
   return (
     <ThemeProvider>
-      {/* Adicionei a validação do showCursor que você havia criado, mas não estava usando na tag */}
-      {showCursor && <Cursor />}
-
       <div className="relative">
-        {/* O Loader é o único elemento que existe de imediato */}
         {!loadingComplete && (
           <Loader onComplete={() => setLoadingComplete(true)} />
         )}
 
-        {/* O conteúdo só é montado (e animado) quando loadingComplete for true */}
         {loadingComplete && (
           <main ref={mainRef} style={{ opacity: 0 }}>
             <Navbar />
             <div className="relative w-full">
-              <Hero />
+              <HeroSection />
               <ScatterTextSection />
             </div>
             <ServicesSection />
             <Projects />
-            {/* <About /> */}
             <WhyWorkWithMe />
             <Contact />
-            <VibePicker />
             <Footer />
           </main>
         )}

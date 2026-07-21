@@ -3,6 +3,7 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { useNavTheme } from "@/hooks/useNavTheme";
 import { useHero } from "@/context/HeroContext";
+import VibePickerInline from "../VibePicker";
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
@@ -16,8 +17,9 @@ export default function Navbar() {
   const theme = useNavTheme();
   const { heroVisivel } = useHero();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentVibe, setCurrentVibe] = useState("Dark"); // Estado do tema
 
-  const navBarRef = useRef<HTMLDivElement>(null); // barra fixa
+  const navBarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const linksContainerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
@@ -46,7 +48,6 @@ export default function Navbar() {
       linksContainerRef.current?.querySelectorAll(".menu-link") ?? [],
     );
 
-    // Estado inicial fechado
     gsap.set(overlayRef.current, { display: "none" });
     gsap.set(linkElements, { y: 40, opacity: 0 });
     gsap.set(footerRef.current, { opacity: 0, y: 20 });
@@ -59,7 +60,6 @@ export default function Navbar() {
       },
     });
 
-    // Abertura
     tl.set(overlayRef.current, { display: "flex" })
       .to([line1Ref.current, line2Ref.current], {
         rotate: (i) => (i === 0 ? 45 : -45),
@@ -145,35 +145,42 @@ export default function Navbar() {
         >
           George Lucas
         </a>
-        <button
-          onClick={toggleMenu}
-          aria-label="Abrir menu"
-          className="relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 pointer-events-auto"
-        >
-          <span
-            ref={line1Ref}
-            className={`block w-6 h-0.5 transition-colors duration-300 ${
-              menuOpen
-                ? "bg-background"
-                : isDark
-                  ? "bg-foreground"
-                  : "bg-background"
-            }`}
+
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <VibePickerInline
+            currentVibe={currentVibe}
+            onVibeChange={setCurrentVibe}
           />
-          <span
-            ref={line2Ref}
-            className={`block w-6 h-0.5 transition-colors duration-300 ${
-              menuOpen
-                ? "bg-background"
-                : isDark
-                  ? "bg-foreground"
-                  : "bg-background"
-            }`}
-          />
-        </button>
+          <button
+            onClick={toggleMenu}
+            aria-label="Abrir menu"
+            className="relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50"
+          >
+            <span
+              ref={line1Ref}
+              className={`block w-6 h-0.5 transition-colors duration-300 ${
+                menuOpen
+                  ? "bg-background"
+                  : isDark
+                    ? "bg-foreground"
+                    : "bg-background"
+              }`}
+            />
+            <span
+              ref={line2Ref}
+              className={`block w-6 h-0.5 transition-colors duration-300 ${
+                menuOpen
+                  ? "bg-background"
+                  : isDark
+                    ? "bg-foreground"
+                    : "bg-background"
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Overlay do menu */}
+      {/* Overlay fullscreen */}
       <div
         ref={overlayRef}
         className="fixed inset-0 z-40 flex-col justify-between p-6 md:p-12 bg-foreground text-background"

@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { servicesCards } from "../../src/data/services-cards";
+import { servicesCards } from "../../data/services-cards";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -21,9 +21,6 @@ function ArrowDownIcon() {
   );
 }
 
-// Quebra o texto em linhas > palavras. Cada palavra fica dentro de uma
-// máscara (overflow-hidden) pra permitir o reveal via translateY no GSAP.
-// O pb/-mb compensa descendentes (g, p, y) pra não cortar a letra.
 function SplitWords({ text }: { text: string }) {
   return (
     <>
@@ -49,7 +46,7 @@ function SplitWords({ text }: { text: string }) {
   );
 }
 
-export function ServicesSection() {
+export function ServicesSectionDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const total = String(servicesCards.length).padStart(2, "0");
 
@@ -59,8 +56,7 @@ export function ServicesSection() {
     const ctx = gsap.context(() => {
       let mm = gsap.matchMedia();
 
-      // DESKTOP: só a tela inicial faz o fade quando o primeiro card sobe.
-      // Os cards empilham via CSS puro (sticky).
+      // DESKTOP: tela inicial com fade, cards empilhados com sticky
       mm.add("(min-width: 1024px)", () => {
         const wrappers = gsap.utils.toArray<HTMLElement>(".service-wrapper");
 
@@ -75,30 +71,53 @@ export function ServicesSection() {
           y: -50,
           ease: "none",
         });
+
+        // Reveal das palavras igual, mas sem conflito
+        wrappers.forEach((wrapper) => {
+          const words = wrapper.querySelectorAll(".split-word");
+          if (!words.length) return;
+          gsap.fromTo(
+            words,
+            { yPercent: 110 },
+            {
+              yPercent: 0,
+              duration: 0.7,
+              ease: "power4.out",
+              stagger: 0.03,
+              scrollTrigger: {
+                trigger: wrapper,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
       });
 
-      // Reveal das palavras do título — roda em qualquer largura de tela,
-      // sem animar a posição do card (ele fica parado, só o texto aparece).
-      const wrappers = gsap.utils.toArray<HTMLElement>(".service-wrapper");
-      wrappers.forEach((wrapper) => {
-        const words = wrapper.querySelectorAll(".split-word");
-        if (!words.length) return;
-
-        gsap.fromTo(
-          words,
-          { yPercent: 110 },
-          {
-            yPercent: 0,
-            duration: 0.7,
-            ease: "power4.out",
-            stagger: 0.03,
-            scrollTrigger: {
-              trigger: wrapper,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
+      // MOBILE: cards normais, sem sticky, sem animação extra de posição
+      mm.add("(max-width: 1023px)", () => {
+        const wrappers = gsap.utils.toArray<HTMLElement>(".service-wrapper");
+        wrappers.forEach((wrapper) => {
+          const words = wrapper.querySelectorAll(".split-word");
+          if (!words.length) return;
+          gsap.fromTo(
+            words,
+            { yPercent: 110 },
+            {
+              yPercent: 0,
+              duration: 0.7,
+              ease: "power4.out",
+              stagger: 0.03,
+              scrollTrigger: {
+                trigger: wrapper,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
             },
-          },
-        );
+          );
+        });
+        // Opcional: resetar qualquer transformação residual da intro
+        gsap.set(".intro-screen", { clearProps: "all" });
       });
     }, containerRef);
 
@@ -106,7 +125,12 @@ export function ServicesSection() {
   }, []);
 
   return (
-    <div ref={containerRef} id="servicos" data-theme="dark" className="relative w-full bg-background">
+    <div
+      ref={containerRef}
+      id="servicos"
+      data-theme="dark"
+      className="relative w-full bg-background"
+    >
       {/* TELA DE ABERTURA */}
       <section className="intro-screen relative w-full min-h-[70vh] lg:min-h-[80vh] bg-background text-foreground flex flex-col justify-between px-6 md:px-12 pt-12 md:pt-16 pb-12 will-change-transform">
         <div className="flex justify-between items-start">
@@ -139,12 +163,16 @@ export function ServicesSection() {
         </div>
       </section>
 
-      {/* CARDS COLAPSÁVEIS (MEIA TELA) */}
-      <div className="pb-[20vh]">
+      <div className="pb-[20vh] flex flex-col">
         {servicesCards.map((service, index) => (
           <div
             key={service.id}
-            className="service-wrapper relative lg:sticky w-full min-h-[50vh] lg:h-[52vh] my-2 lg:my-0 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
+            className={
+              "service-wrapper relative w-full m-0 p-0 " + // reset de margem/padding
+              "lg:sticky lg:h-[52vh] " +
+              "min-h-0 lg:min-h-[50vh] " +
+              "lg:shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
+            }
             style={{
               top: `${index * 56}px`,
               zIndex: index + 1,
@@ -153,14 +181,14 @@ export function ServicesSection() {
             <section
               className={`service-inner w-full h-full p-6 md:p-10 lg:p-12 flex flex-col justify-between overflow-hidden transition-colors duration-300 will-change-transform ${service.bgClass} ${service.textClass}`}
             >
-              {/* TOPO: só a tag, sem número e sem linha */}
+              {/* TOPO: tag */}
               <div className="flex justify-between items-center pb-4">
                 <span className="font-mono text-xs uppercase tracking-widest opacity-80">
                   {service.label}
                 </span>
               </div>
 
-              {/* MEIO: Título e Descrição Lado a Lado (Estilo Editorial) */}
+              {/* MEIO: Título e Descrição */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 my-auto py-4 items-center">
                 <div className="col-span-1 lg:col-span-7">
                   <h2 className="font-display font-medium text-3xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl leading-[0.9] tracking-tighter">
@@ -178,7 +206,7 @@ export function ServicesSection() {
                 </div>
               </div>
 
-              {/* BASE: Ação / Call to Action */}
+              {/* BASE: botão */}
               <div className="flex justify-between items-end pt-4">
                 <button className="group inline-flex items-center gap-2 text-sm md:text-base font-semibold tracking-tight hover:opacity-75 transition-opacity">
                   <span>{service.actionText}</span>
