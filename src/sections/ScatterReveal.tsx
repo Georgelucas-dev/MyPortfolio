@@ -67,6 +67,7 @@ export default function ScatterTextSection() {
   return (
     <section
       ref={containerRef}
+      ata-theme="light"
       className="relative -mt-[100svh] h-[400svh] w-full z-10 pointer-events-none"
     >
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden pointer-events-none">

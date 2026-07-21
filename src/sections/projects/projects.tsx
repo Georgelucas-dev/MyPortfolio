@@ -3,7 +3,7 @@ import MobileProjects from "./MobileProjects";
 
 function Projects() {
   return (
-    <section id="projects">
+    <section id="projetos" data-theme="dark">
       <div className="hidden lg:block">
         <DesktopProjects />
       </div>

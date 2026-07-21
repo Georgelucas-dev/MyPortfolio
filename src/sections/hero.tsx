@@ -1,37 +1,79 @@
 import { useEffect, useRef } from "react";
 import { useHero } from "@/context/HeroContext";
 import { gsap } from "gsap";
-import HeroNav from "@/components/Navbar/HeroNavbar";
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
   const nameRef = useRef<HTMLHeadingElement | null>(null);
   const centerTextRef = useRef<HTMLSpanElement | null>(null);
-  const { setHeroVisivel } = useHero();
+  const { heroVisivel } = useHero(); // agora consumimos também o estado
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+
+  // (seu observer de visibilidade, se houver, pode ficar em outro useEffect)
 
   useEffect(() => {
-    // ... seu código de observer
-  }, [setHeroVisivel]);
+    // Só inicia a animação quando o loader der o sinal verde
+    if (!heroVisivel) return;
 
-  useEffect(() => {
-    // ... suas animações do Hero
-  }, []);
+    // Garante os estados iniciais (caso alguma recarga atrase)
+    gsap.set(nameRef.current, {
+      opacity: 0,
+      y: 35,
+      scale: 1.12,
+      transformOrigin: "center bottom",
+    });
+    gsap.set(centerTextRef.current, {
+      opacity: 0,
+      y: 20,
+    });
+    gsap.set(".hero-nav-item", {
+      opacity: 0,
+      y: -12,
+    });
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power3.out" },
+    });
+
+    tl.to(nameRef.current, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: "expo.out",
+    })
+      .to(centerTextRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.65")
+      .to(
+        ".hero-nav-item",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.08,
+        },
+        "-=0.45",
+      );
+
+    timelineRef.current = tl;
+
+    return () => {
+      tl.kill();
+    };
+  }, [heroVisivel]); // gatilho único
 
   return (
     <section
       ref={heroRef}
       id="home"
-      // ADICIONADO: sticky top-0 e z-0
+      data-theme="dark"
       className="relative sticky top-0 w-full h-svh bg-background flex flex-col justify-between overflow-hidden select-none z-0"
     >
-      <HeroNav />
-
       <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
         <span
           ref={centerTextRef}
           className="font-display text-sm sm:text-base md:text-xl uppercase tracking-[0.35em] text-foreground/80 font-light will-change-transform"
         >
-          DESIGN & CÓDIGO
+          Clean & Smooth
         </span>
       </div>
 

@@ -106,7 +106,7 @@ export function ServicesSection() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-background">
+    <div ref={containerRef} id="servicos" data-theme="dark" className="relative w-full bg-background">
       {/* TELA DE ABERTURA */}
       <section className="intro-screen relative w-full min-h-[70vh] lg:min-h-[80vh] bg-background text-foreground flex flex-col justify-between px-6 md:px-12 pt-12 md:pt-16 pb-12 will-change-transform">
         <div className="flex justify-between items-start">

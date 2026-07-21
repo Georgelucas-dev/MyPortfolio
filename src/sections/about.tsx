@@ -88,6 +88,7 @@ export function About() {
     <section
       ref={containerRef}
       id="about"
+      data-theme="dark"
       className="relative min-h-[100svh] w-full bg-background text-ink flex items-center overflow-hidden py-24 md:py-32"
     >
       <div className="w-full pl-6 md:pl-16 lg:pl-24 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-20">

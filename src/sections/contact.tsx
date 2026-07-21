@@ -76,7 +76,7 @@ export default function Contact() {
   return (
     <div className="w-full overflow-x-clip bg-background">
       <section
-        id="contact"
+        id="contato" data-theme="light"
         ref={containerRef}
         className="relative w-full h-[100svh] overflow-hidden flex items-center justify-center"
       >
