@@ -53,9 +53,9 @@ function App() {
             </div>
             <ServicesSection />
             <Projects />
-            <About />
+            {/* <About /> */}
             <WhyWorkWithMe />
-            <Contact />
+            {/* <Contact /> */}
             <Footer />
           </main>
         )}
