@@ -28,36 +28,36 @@ export default function ScatterTextSection() {
           trigger: containerRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 0.8, // scrub mais responsivo
         },
       });
 
-      // PASSO 1: DEAD ZONE (ATRASO)
-      tl.to({}, { duration: 0.5 });
+      // Dead zone reduzida
+      tl.to({}, { duration: 0.3 });
 
-      // PASSO 2: A MÁSCARA EXPANDE
+      // Máscara expande
       tl.to(maskRef.current, {
         clipPath: "circle(150% at 50% 50%)",
-        duration: 2.5,
+        duration: 1.5,
         ease: "power2.inOut",
       });
 
       // PASSO 2.5: DESLIGA O HERO
       // Seleciona o Hero pela ID e faz ele sumir do DOM (autoAlpha)
       // O "-=0.2" faz isso acontecer sutilmente antes do portal terminar de abrir
-      tl.to("#home", { autoAlpha: 0, duration: 0.1 }, "-=0.2");
+      tl.to("#home", { opacity: 0, duration: 0.1 }, "-=0.15");
 
-      // PASSO 3: AS PALAVRAS ENTRAM
+      // Palavras entram
       tl.to(
         wordsRef.current,
         {
           x: "0vw",
           opacity: 1,
           stagger: 0.12,
-          duration: 3,
+          duration: 1.5,
           ease: "power2.out",
         },
-        "-=0.1",
+        "-=0.05",
       ); // Inicia levemente antes do Hero sumir 100%
     }, containerRef);
 
@@ -68,12 +68,12 @@ export default function ScatterTextSection() {
     <section
       ref={containerRef}
       ata-theme="light"
-      className="relative -mt-[100svh] h-[400svh] w-full z-10 pointer-events-none"
+      className="relative -mt-svh h-[400svh] w-full z-10 pointer-events-none"
     >
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden pointer-events-none">
+      <div className="sticky top-0 h-svh w-full overflow-hidden pointer-events-none">
         <div
           ref={maskRef}
-          className="w-full h-full bg-foreground text-background flex items-center px-6 md:pl-32 lg:pl-48 md:pr-12 pointer-events-auto will-change-[clip-path]"
+          className="w-full h-full bg-foreground text-background flex items-center px-6 md:px-20 pointer-events-auto will-change-[clip-path]"
           style={{ clipPath: "circle(0px at 50% 50%)" }}
         >
           <div className="relative z-10 w-full flex flex-wrap justify-start text-left">

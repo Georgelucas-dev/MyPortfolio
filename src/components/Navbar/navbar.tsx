@@ -3,7 +3,6 @@ import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { useNavTheme } from "@/hooks/useNavTheme";
 import { useHero } from "@/context/HeroContext";
-import VibePickerInline from "../VibePicker";
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
@@ -17,7 +16,6 @@ export default function Navbar() {
   const theme = useNavTheme();
   const { heroVisivel } = useHero();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [currentVibe, setCurrentVibe] = useState("Dark"); // Estado do tema
 
   const navBarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -129,6 +127,12 @@ export default function Navbar() {
     if (target) {
       target.scrollIntoView({ behavior: "smooth" });
     }
+    if (href === "#home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -147,10 +151,6 @@ export default function Navbar() {
         </a>
 
         <div className="flex items-center gap-2 pointer-events-auto">
-          <VibePickerInline
-            currentVibe={currentVibe}
-            onVibeChange={setCurrentVibe}
-          />
           <button
             onClick={toggleMenu}
             aria-label="Abrir menu"
