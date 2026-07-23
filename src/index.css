@@ -8,10 +8,19 @@
   color: var(--selection-foreground);
 }
 
+@font-face {
+  font-family: "Dirtyline";
+  src: url("/src/assets/fonts/Dirtyline\ 36daysoftype\ 2022.woff2") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   /* Tipografia: 2 Fontes. Sans para UI/Textos, Display para Títulos Massivos */
   --font-sans: "Geist", sans-serif;
   --font-display: "Lexend", sans-serif;
+  --font-dirty: "Dirtyline", sans-serif;
 
   /* Cores Estruturais Base */
   --color-foreground: var(--foreground);
