@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { useHero } from "@/context/HeroContext";
 import { gsap } from "gsap";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -6,7 +6,6 @@ import HeroContentMinimal from "./HeroContentMinimal";
 import FilmGrain from "./FilmGrain";
 import ImageRevealContainer from "./ImageRevealContainer";
 import HeroImg from "./heroImg.jpg";
-
 const HERO_IMAGE = HeroImg;
 
 const COLS = 20;
@@ -19,6 +18,12 @@ export default function HeroSection() {
   const pixelsRef = useRef<(HTMLDivElement | null)[]>([]);
   const { heroVisivel } = useHero();
   const isMobile = useMediaQuery("(max-width: 1023px)");
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
 
   // Gera o grid apenas uma vez, de forma estável
   const pixelGrid = useMemo(
@@ -69,8 +74,8 @@ export default function HeroSection() {
     >
       <FilmGrain />
       <div className="absolute inset-0 pt-20 px-4 md:px-12">
-        <div className="flex flex-col h-full">
-          <div className="flex-1 min-h-0 relative rounded-3xl overflow-hidden">
+        <div className="flex flex-col h-full gap-2">
+          <div className="flex-1 min-h-0 relative overflow-hidden">
             <ImageRevealContainer
               imageSrc={HERO_IMAGE}
               enableReveal={!isMobile}

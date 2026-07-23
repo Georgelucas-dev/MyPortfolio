@@ -46,7 +46,7 @@ export default function ImageRevealContainer({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full rounded-3xl overflow-hidden ${
+      className={`relative w-full h-full overflow-hidden ${
         enableReveal ? "cursor-none" : ""
       }`}
       onPointerEnter={handlePointerEnter}

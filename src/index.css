@@ -41,14 +41,14 @@
 
 :root {
   /* Dark é o único tema — valores que antes viviam em .dark agora são a base */
-  --background: oklch(0.1 0 0);
-  --foreground: oklch(100% 0.00011 271.152);
+  --foreground: oklch(0.1 0 0);
+  --background: oklch(100% 0.00011 271.152);
 
   --card: oklch(0.15 0.01 260);
   --card-foreground: oklch(0.96 0.01 260);
 
-  --ink: oklch(0.96 0.01 260);
-  --ink-soft: oklch(0.7 0.01 260);
+  --ink: oklch(0% 0 0);
+  --ink-soft: oklch(17.764% 0.00002 271.152);
 
   /* Antes eram um laranja-avermelhado (hue 37) e um verde-amarelado (hue 140),
      duas famílias soltas que não conversavam com o azul-acinzentado do
@@ -56,7 +56,7 @@
      complementar do azul, então funciona como o contraste que "combina" em
      vez de destoar — e sage virou um teal frio, vizinho do mesmo hue 260,
      então lê como parte da mesma família em vez de um verde aleatório. */
-  --clay: oklch(0.72 0.16 68);
+  --clay: oklch(57.889% 0.23756 29.223);
   --sage: oklch(0.62 0.09 195);
 
   --paper: oklch(0.13 0.01 260);

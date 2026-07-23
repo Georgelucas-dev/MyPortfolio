@@ -147,7 +147,7 @@ export default function Navbar() {
           onClick={(e) => handleLinkClick(e, "#home")}
           className={`text-xl font-display font-bold tracking-tight transition-colors duration-300 ${logoColor}`}
         >
-          George Lucas
+          GL
         </a>
 
         <div className="flex items-center gap-2 pointer-events-auto">
